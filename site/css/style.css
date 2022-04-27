@@ -1,8 +1,15 @@
 body{
-    background-color: rgb(255, 255, 255);
+    background-image: url("");
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; ;
+    display: flex;
+    flex-direction: column;
+}
+.inicio{
+    display: flex;
+    flex-direction: row;
 }
 
-.cabeçalho{
+.cabeçalho1{
     display: flex;
     justify-content: center;
     background-color: rgb(40, 40, 40);
@@ -16,18 +23,44 @@ h1{
     background: rgb(253, 194, 204);
     padding: 0.75%;  
 }
+.cabeçalho2{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5%;
+    font-family: fantasy;
+    border: 1px solid black;
+    border-radius: 7px;
+    background: rgb(253, 194, 204);
+    padding: 0.15%;  
+}
+button{
+    display: flex;
+    flex-direction: row;
+    margin: 0.5%;
+    border: 1px solid black;
+    border-radius: 7px;
+    background: rgb(255, 255, 255);
+    padding: 1%; 
+}
+
 .descricao{
     width: 50%;
     display: flex;
     justify-content: flex-start;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+iframe{
+    display: flex;
+    
 }
 .meio1{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-iframe{
+.images{
     display: flex;
-   
+    margin: 10%;
+    justify-content: space-between;
+    
 }
