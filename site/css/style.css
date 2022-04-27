@@ -5,16 +5,29 @@ body{
 .cabeçalho{
     display: flex;
     justify-content: center;
+    background-color: rgb(40, 40, 40);
+    border-radius: 10px
 }
 h1{
-    font-style: oblique;
+    margin: 0.5%;
+    font-family: fantasy;
     border: 1px solid black;
     border-radius: 7px;
     background: rgb(253, 194, 204);
-    padding: 10px;  
+    padding: 0.75%;  
 }
-.meio1{
+.descricao{
     width: 50%;
     display: flex;
     justify-content: flex-start;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.meio1{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+iframe{
+    display: flex;
+   
 }
