@@ -16,11 +16,16 @@ def inicializa():
             pygame.image.load('sprites/protag4.png'),
             pygame.image.load('sprites/protag5.png'),
             pygame.image.load('sprites/protag6.png')
-            ]
+            ],
+        'synthsewers': pygame.mixer.Sound('music/synthsewers.ogg')
         }
 
     state = {'fps': pygame.time.Clock(),
-            'protagframe': 0
+            'protagframe': 0,
+            'time_elapsed': 0,
+            'song_playing': False,
+            'protagbounce': False,
+            'synthsewers_timings': []
         }
 
     return window, assets, state
@@ -33,14 +38,28 @@ def finaliza():
 
 #Função desenhar na tela
 def desenha(window: pygame.Surface, assets, state):
-    window.fill((255, 255, 255))
+    if not state['song_playing']:
+        assets['synthsewers'].play()
+        state['song_playing'] = True
+
+    window.fill((0, 0, 255))
 
     #Desenhos vão aqui!
     if state['protagframe'] > 5:
         state['protagframe'] = 0
-    protag_resized = pygame.transform.scale(assets['protag'][state['protagframe']], (192, 288))
-    protag = window.blit(protag_resized, (50,50))
-    state['protagframe'] += 1
+        state['protagbounce'] = False
+    protag = window.blit(assets['protag'][state['protagframe']], (577, 244))
+    
+    if state['time_elapsed'] % 600 == 0:
+        state['protagbounce'] = True
+
+    if state['protagbounce']:
+        if state['time_elapsed'] % 60 == 0:
+            state['protagframe'] += 1
+
+
+    state['time_elapsed'] += 1
+    print(state['time_elapsed'])
 
     pygame.display.update()
 
