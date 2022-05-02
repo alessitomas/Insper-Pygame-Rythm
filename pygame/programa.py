@@ -1,29 +1,54 @@
-# ===== Inicialização =====
-# ----- Importa e inicia pacotes
+# Import do Pygame
 import pygame
 
-pygame.init()
 
-# ----- Gera tela principal
-window = pygame.display.set_mode((500, 400))
+#Inicialização do Game
+def inicializa():
+    pygame.init()
+    pygame.mixer.init()
+    window = pygame.display.set_mode((1280, 720))
+
+    assets = {}
+
+    state = {}
+
+    return window, assets, state
 
 
-# ----- Inicia estruturas de dados
-game = True
+#Finalização do Game
+def finaliza():
+    pygame.quit()
 
-# ===== Loop principal =====
-while game:
-    # ----- Trata eventos
+
+#Função desenhar na tela
+def desenha(window: pygame.Surface, assets, state):
+    window.fill((255, 255, 255))
+
+    #Desenhos vão aqui!
+    #a
+
+    pygame.display.update()
+
+#Atualizar estado
+def atualiza_estado(state):
+
     for event in pygame.event.get():
-        # ----- Verifica consequências
         if event.type == pygame.QUIT:
-            game = False
+            return False
+        else:
+            pass
+            #Eventos vão aqui!
+            #a
+    
+    return True
 
-    # ----- Gera saídas
-    window.fill((255, 255, 255))  # Preenche com a cor branca
 
-    # ----- Atualiza estado do jogo
-    pygame.display.update()  # Mostra o novo frame para o jogador
+def gameloop(window, assets, state):
+    while atualiza_estado(state):
+        desenha(window, assets, state)
 
-# ===== Finalização =====
-pygame.quit()  # Função do PyGame que finaliza os recursos utilizados
+
+if __name__ == '__main__':
+    window, assets, state = inicializa()
+    gameloop(window, assets, state)
+    finaliza()
