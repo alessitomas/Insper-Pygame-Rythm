@@ -1,5 +1,6 @@
 # Import do Pygame
 import pygame
+import time
 
 
 #Inicialização do Game
@@ -17,16 +18,20 @@ def inicializa():
             pygame.image.load('sprites/protag5.png'),
             pygame.image.load('sprites/protag6.png')
             ],
-        'synthsewers': pygame.mixer.Sound('music/synthsewers.ogg')
+        'synthsewers': pygame.mixer.music.load('music/synthsewers.ogg'),
+        'hitsound': pygame.mixer.Sound('music/hitsound.ogg')
         }
 
-    state = {'fps': pygame.time.Clock(),
+    state = {'fps': 60,
             'protagframe': 0,
             'time_elapsed': 0,
             'song_playing': False,
             'protagbounce': False,
-            'synthsewers_timings': []
+            'synthsewers_timings': [19*60],
+            'clock': pygame.time.Clock()
         }
+
+    time.sleep(0.3)
 
     return window, assets, state
 
@@ -39,10 +44,10 @@ def finaliza():
 #Função desenhar na tela
 def desenha(window: pygame.Surface, assets, state):
     if not state['song_playing']:
-        assets['synthsewers'].play()
+        pygame.mixer.music.play()
         state['song_playing'] = True
 
-    window.fill((0, 0, 255))
+    window.fill((255, 150, 0))
 
     #Desenhos vão aqui!
     if state['protagframe'] > 5:
@@ -50,16 +55,20 @@ def desenha(window: pygame.Surface, assets, state):
         state['protagbounce'] = False
     protag = window.blit(assets['protag'][state['protagframe']], (577, 244))
     
-    if state['time_elapsed'] % 600 == 0:
+    if state['time_elapsed'] % 60 == 0:
         state['protagbounce'] = True
+        assets['hitsound'].play()
 
     if state['protagbounce']:
-        if state['time_elapsed'] % 60 == 0:
+        if state['time_elapsed'] % 5 == 0:
             state['protagframe'] += 1
 
 
     state['time_elapsed'] += 1
     print(state['time_elapsed'])
+
+    #if state['time_elapsed'] in state['synthsewers_timings']:
+        #assets['hitsound'].play()
 
     pygame.display.update()
 
@@ -78,8 +87,8 @@ def atualiza_estado(state):
 
 
 def gameloop(window, assets, state):
-    state['fps'].tick(60)
     while atualiza_estado(state):
+        state['clock'].tick(state['fps'])
         desenha(window, assets, state)
 
 
