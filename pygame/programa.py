@@ -8,9 +8,20 @@ def inicializa():
     pygame.mixer.init()
     window = pygame.display.set_mode((1280, 720))
 
-    assets = {}
+    assets = {
+        'protag': [
+            pygame.image.load('sprites/protag1.png'),
+            pygame.image.load('sprites/protag2.png'),
+            pygame.image.load('sprites/protag3.png'),
+            pygame.image.load('sprites/protag4.png'),
+            pygame.image.load('sprites/protag5.png'),
+            pygame.image.load('sprites/protag6.png')
+            ]
+        }
 
-    state = {}
+    state = {'fps': pygame.time.Clock(),
+            'protagframe': 0
+        }
 
     return window, assets, state
 
@@ -25,7 +36,11 @@ def desenha(window: pygame.Surface, assets, state):
     window.fill((255, 255, 255))
 
     #Desenhos vão aqui!
-    #a
+    if state['protagframe'] > 5:
+        state['protagframe'] = 0
+    protag_resized = pygame.transform.scale(assets['protag'][state['protagframe']], (192, 288))
+    protag = window.blit(protag_resized, (50,50))
+    state['protagframe'] += 1
 
     pygame.display.update()
 
@@ -44,6 +59,7 @@ def atualiza_estado(state):
 
 
 def gameloop(window, assets, state):
+    state['fps'].tick(60)
     while atualiza_estado(state):
         desenha(window, assets, state)
 
