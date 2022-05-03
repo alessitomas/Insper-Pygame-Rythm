@@ -6,6 +6,15 @@ from funcoes import *
 fps = 60
 clock = pygame.time.Clock()
 
+def enemy_move(origin, x, y):
+    if origin == 'up':
+        if y <= 100:
+            y += 15
+    new_coords = (x, y)
+    print(new_coords)
+    return new_coords
+
+
 #Inicialização do Game
 def inicializa():
     
@@ -30,10 +39,9 @@ def inicializa():
             'synthsewers_blue_right': [19*60, 23*60, 27*60, 27.5*60, 31*60, 31.5*60, 33*60, 35*60, 35.5*60, 37*60, 39*60, 39.5*60, 41*60, 43*60, 43.5*60, 45*60, 47*60, 47.5*60, 49.5*60, 51.5*60, 52*60, 53*60],
             'dt': 1,
             'prev_time': time.time(),
-            'slash_right': False,
-            'slash_left': False,
-            'slash_up': False,
-            'slash_down': False,
+            'slash_direction': 'none',
+            'enemy_up_x': 607,
+            'enemy_up_y': -63,
         }
 
     #para carregar os assets sem lag depois
@@ -68,13 +76,13 @@ def desenha(window: pygame.Surface, assets, state):
             state['bgframe'] = 0
 
     #Sword
-    if state['slash_right']:
+    if state['slash_direction'] == 'right':
         right = window.blit(assets['swordright'], (741,333))
-    if state['slash_left']:
+    elif state['slash_direction'] == 'left':
         left = window.blit(assets['swordleft'], (417,333))
-    if state['slash_up']:
+    elif state['slash_direction'] == 'up':
         up = window.blit(assets['swordup'], (612,150))
-    if state['slash_down']:
+    elif state['slash_direction'] == 'down':
         down = window.blit(assets['sworddown'], (612,447))
 
     #Protag Bounce
@@ -95,9 +103,11 @@ def desenha(window: pygame.Surface, assets, state):
     if state['enemy_blue_frame'] > 5:
         state['enemy_blue_frame'] = 0
     
+    state['enemy_up_y'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'])[1]
+    
     #Render Protag and Enemies
     if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
-        enemy = window.blit(assets['enemy_blue'][state['enemy_blue_frame']], (567, 181))
+        enemy_up = window.blit(assets['enemy_blue'][state['enemy_blue_frame']], (state['enemy_up_x'], state['enemy_up_y']))
         protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
 
     #Metronome
@@ -105,9 +115,9 @@ def desenha(window: pygame.Surface, assets, state):
         assets['metronome'].play()
 
     #Dramatic Lines
-    if state['time_elapsed'] <= 14*60:
-        pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
-        pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+    #if state['time_elapsed'] <= 14*60:
+    #    pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
+    #    pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
 
     #3, 2, 1, HIT IT!
     if state['time_elapsed'] >= 14*60 and state['time_elapsed'] < 15*60:
@@ -148,33 +158,32 @@ def atualiza_estado(state):
             #Right Sword
             if event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
                 assets['right_test'].play()
-                state['slash_right'] = True
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
-                state['slash_right'] = False
+                state['slash_direction'] = 'right'
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and state['slash_direction'] == 'right':
+                state['slash_direction'] = 'none'
 
             #Left Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
                 assets['left_test'].play()
-                state['slash_left'] = True
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
-                state['slash_left'] = False
+                state['slash_direction'] = 'left'
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_LEFT or event.key == pygame.K_a) and state['slash_direction'] == 'left':
+                state['slash_direction'] = 'none'
             
             #Up Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_UP or event.key == pygame.K_w):
                 assets['up_test'].play()
-                state['slash_up'] = True
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_UP or event.key == pygame.K_w):
-                state['slash_up'] = False
+                state['slash_direction'] = 'up'
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_UP or event.key == pygame.K_w) and state['slash_direction'] == 'up':
+                state['slash_direction'] = 'none'
 
             #Down Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
                 assets['down_test'].play()
-                state['slash_down'] = True
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
-                state['slash_down'] = False
+                state['slash_direction'] = 'down'
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_DOWN or event.key == pygame.K_s) and state['slash_direction'] == 'down':
+                state['slash_direction'] = 'none'
 
             #Eventos vão aqui!
-            #a
     
     return True
 
