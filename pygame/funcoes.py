@@ -51,10 +51,10 @@ def load_assets():
         'left_test': pygame.mixer.Sound('music/left_test.ogg'),
         'right_test': pygame.mixer.Sound('music/right_test.ogg'),
 
-        'sword_up': pygame.image.load('sprites/sword_up.png'),
-        'sword_down': pygame.image.load('sprites/sword_down.png'),
-        'sword_left': pygame.image.load('sprites/sword_left.png'),
-        'sword_right': pygame.image.load('sprites/sword_right.png'),
+        'swordup': pygame.image.load('sprites/swordup.png'),
+        'sworddown': pygame.image.load('sprites/sworddown.png'),
+        'swordleft': pygame.image.load('sprites/swordleft.png'),
+        'swordright': pygame.image.load('sprites/swordright.png'),
         }
     return loadedassets
 

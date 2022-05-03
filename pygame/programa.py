@@ -69,19 +69,13 @@ def desenha(window: pygame.Surface, assets, state):
 
     #Sword
     if state['slash_right']:
-        right = window.blit(assets['sword_right'], (0,0))
+        right = window.blit(assets['swordright'], (741,333))
     if state['slash_left']:
-        left = window.blit(assets['sword_left'], (0,0))
+        left = window.blit(assets['swordleft'], (417,333))
     if state['slash_up']:
-        up = window.blit(assets['sword_up'], (0,0))
+        up = window.blit(assets['swordup'], (612,150))
     if state['slash_down']:
-        down = window.blit(assets['sword_down'], (0,0))
-
-    #Enemies
-    if state['time_elapsed'] % 5 == 0:
-            state['enemy_blue_frame'] += 1
-    if state['enemy_blue_frame'] > 5:
-        state['enemy_blue_frame'] = 0
+        down = window.blit(assets['sworddown'], (612,447))
 
     #Protag Bounce
     if state['time_elapsed'] % 60 == 0:
@@ -94,11 +88,18 @@ def desenha(window: pygame.Surface, assets, state):
     if state['protagframe'] > 5:
         state['protagframe'] = 0
         state['protagbounce'] = False
+
+    #Enemies
+    if state['time_elapsed'] % 5 == 0:
+            state['enemy_blue_frame'] += 1
+    if state['enemy_blue_frame'] > 5:
+        state['enemy_blue_frame'] = 0
     
     #Render Protag and Enemies
     if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
-        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
         enemy = window.blit(assets['enemy_blue'][state['enemy_blue_frame']], (567, 181))
+        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
+
     #Metronome
     if state['time_elapsed'] % 30 == 0:
         assets['metronome'].play()
@@ -185,7 +186,7 @@ def gameloop(window, assets, state):
         now = time.time()
         dt = now - state['prev_time']
         state['prev_time'] = now
-        pygame.time.delay(5)
+        #pygame.time.delay(5)
         #print(round(clock.get_fps(),2))
 
 
