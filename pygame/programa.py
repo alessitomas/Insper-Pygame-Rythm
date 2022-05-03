@@ -66,6 +66,9 @@ def desenha(window: pygame.Surface, assets, state):
         pygame.mixer.music.play()
         state['song_playing'] = True
 
+    state['events'] = [x for x in state['synthsewers_timings'] if x <= state['time_elapsed']],
+    #print(state['events'])
+
     window.fill((255, 150, 0))
     bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
 
@@ -120,6 +123,8 @@ def desenha(window: pygame.Surface, assets, state):
 #Atualizar estado
 def atualiza_estado(state):
 
+    state['clock'].tick(state['fps'])
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             return False
@@ -133,7 +138,6 @@ def atualiza_estado(state):
 
 def gameloop(window, assets, state):
     while atualiza_estado(state):
-        state['clock'].tick(state['fps'])
         desenha(window, assets, state)
 
 
