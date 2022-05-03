@@ -6,8 +6,13 @@ import time
 #Inicialização do Game
 def inicializa():
     pygame.init()
+    pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
     pygame.mixer.init()
     window = pygame.display.set_mode((1280, 720))
+    #window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    pygame.display.set_caption('Tenor Blade')
+    icon = pygame.image.load('sprites/tabicon.png')
+    pygame.display.set_icon(icon)
 
     assets = {
         'protag': [
@@ -18,16 +23,30 @@ def inicializa():
             pygame.image.load('sprites/protag5.png'),
             pygame.image.load('sprites/protag6.png')
             ],
+        'sewerbg': [
+            pygame.image.load('sprites/bg1.png'),
+            pygame.image.load('sprites/bg2.png'),
+            pygame.image.load('sprites/bg3.png'),
+            pygame.image.load('sprites/bg4.png'),
+            pygame.image.load('sprites/bg5.png'),
+            pygame.image.load('sprites/bg6.png'),
+            ],
+        '3': pygame.image.load('sprites/3.png'),
+        '2': pygame.image.load('sprites/2.png'),
+        '1': pygame.image.load('sprites/1.png'),
+        'hit_it': pygame.image.load('sprites/hit_it.png'),
         'synthsewers': pygame.mixer.music.load('music/synthsewers.ogg'),
-        'hitsound': pygame.mixer.Sound('music/hitsound.ogg')
+        'hitsound': pygame.mixer.Sound('music/hitsound.ogg'),
+        'metronome': pygame.mixer.Sound('music/metronome.ogg'),
         }
 
     state = {'fps': 60,
             'protagframe': 0,
+            'bgframe': 0,
             'time_elapsed': 0,
             'song_playing': False,
             'protagbounce': False,
-            'synthsewers_timings': [19*60],
+            'synthsewers_timings': [19*60, 23*60, 27*60, 27.5*60, 31*60, 31.5*60, 33*60, 35*60, 35.5*60, 37*60, 39*60, 39.5*60, 41*60, 43*60, 43.5*60, 45*60, 47*60, 47.5*60, 49.5*60, 51.5*60, 52*60, 53*60],
             'clock': pygame.time.Clock()
         }
 
@@ -48,27 +67,53 @@ def desenha(window: pygame.Surface, assets, state):
         state['song_playing'] = True
 
     window.fill((255, 150, 0))
+    bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
 
     #Desenhos vão aqui!
+    if state['time_elapsed'] % 8 == 0:
+        state['bgframe'] += 1
+        if state['bgframe'] > 5:
+            state['bgframe'] = 0
+
     if state['protagframe'] > 5:
         state['protagframe'] = 0
         state['protagbounce'] = False
-    protag = window.blit(assets['protag'][state['protagframe']], (577, 244))
+    protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
     
+    if state['time_elapsed'] % 30 == 0:
+        assets['metronome'].play()
+
     if state['time_elapsed'] % 60 == 0:
         state['protagbounce'] = True
-        assets['hitsound'].play()
 
     if state['protagbounce']:
         if state['time_elapsed'] % 5 == 0:
             state['protagframe'] += 1
 
+    if state['time_elapsed'] <= 14*60:
+        pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
+        pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+
+    if state['time_elapsed'] >= 14*60 and state['time_elapsed'] < 15*60:
+        pygame.draw.rect(window, (0,0,0), (0,0,1280,720))
+    if state['time_elapsed'] >= 15*60 and state['time_elapsed'] < 15.25*60:
+        pygame.draw.rect(window, (63.75,63.75,63.75), (0,0,1280,720))
+        count_3 = window.blit(assets['3'], (0, 0))
+    if state['time_elapsed'] >= 15.25*60 and state['time_elapsed'] < 15.5*60:
+        pygame.draw.rect(window, (127.5,127.5,127.5), (0,0,1280,720))
+        count_2 = window.blit(assets['2'], (0, 0))
+    if state['time_elapsed'] >= 15.5*60 and state['time_elapsed'] < 15.75*60:
+        pygame.draw.rect(window, (191.25,191.25,191.25), (0,0,1280,720))
+        count_1 = window.blit(assets['1'], (0, 0))
+    if state['time_elapsed'] >= 15.75*60 and state['time_elapsed'] < 16*60:
+        pygame.draw.rect(window, (255,255,255), (0,0,1280,720))
+        count_hit_it = window.blit(assets['hit_it'], (0, 0))
 
     state['time_elapsed'] += 1
     print(state['time_elapsed'])
 
-    #if state['time_elapsed'] in state['synthsewers_timings']:
-        #assets['hitsound'].play()
+    if state['time_elapsed'] in state['synthsewers_timings']:
+        assets['hitsound'].play()
 
     pygame.display.update()
 
