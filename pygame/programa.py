@@ -1,59 +1,44 @@
 # Import do Pygame
 import pygame
 import time
+from funcoes import *
 
+fps = 60
+clock = pygame.time.Clock()
 
 #Inicialização do Game
 def inicializa():
+    
     pygame.init()
     pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
     pygame.mixer.init()
-    window = pygame.display.set_mode((1280, 720))
+    window = pygame.display.set_mode((1280, 720), vsync=1)
     #window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption('Tenor Blade')
     icon = pygame.image.load('sprites/tabicon.png')
     pygame.display.set_icon(icon)
 
-    assets = {
-        'protag': [
-            pygame.image.load('sprites/protag1.png'),
-            pygame.image.load('sprites/protag2.png'),
-            pygame.image.load('sprites/protag3.png'),
-            pygame.image.load('sprites/protag4.png'),
-            pygame.image.load('sprites/protag5.png'),
-            pygame.image.load('sprites/protag6.png')
-            ],
-        'sewerbg': [
-            pygame.image.load('sprites/bg1.png'),
-            pygame.image.load('sprites/bg2.png'),
-            pygame.image.load('sprites/bg3.png'),
-            pygame.image.load('sprites/bg4.png'),
-            pygame.image.load('sprites/bg5.png'),
-            pygame.image.load('sprites/bg6.png'),
-            ],
-        '3': pygame.image.load('sprites/3.png'),
-        '2': pygame.image.load('sprites/2.png'),
-        '1': pygame.image.load('sprites/1.png'),
-        'hit_it': pygame.image.load('sprites/hit_it.png'),
-        'synthsewers': pygame.mixer.music.load('music/synthsewers.ogg'),
-        'hitsound': pygame.mixer.Sound('music/hitsound.ogg'),
-        'metronome': pygame.mixer.Sound('music/metronome.ogg'),
-        }
+    assets = load_assets()
 
-    state = {'fps': 60,
+    state = {
             'protagframe': 0,
             'bgframe': 0,
             'time_elapsed': 0,
             'song_playing': False,
             'protagbounce': False,
-            'synthsewers_timings': [19*60, 23*60, 27*60, 27.5*60, 31*60, 31.5*60, 33*60, 35*60, 35.5*60, 37*60, 39*60, 39.5*60, 41*60, 43*60, 43.5*60, 45*60, 47*60, 47.5*60, 49.5*60, 51.5*60, 52*60, 53*60],
-            'clock': pygame.time.Clock()
+            'synthsewers_blue_right': [19*60, 23*60, 27*60, 27.5*60, 31*60, 31.5*60, 33*60, 35*60, 35.5*60, 37*60, 39*60, 39.5*60, 41*60, 43*60, 43.5*60, 45*60, 47*60, 47.5*60, 49.5*60, 51.5*60, 52*60, 53*60],
+            'dt': 1,
+            'prev_time': time.time(),
+            'slash_right': False,
+            'slash_left': False,
+            'slash_up': False,
+            'slash_down': False,
         }
 
-    time.sleep(0.3)
+    #para carregar os assets sem lag depois
+    #time.sleep(3)
 
     return window, assets, state
-
 
 #Finalização do Game
 def finaliza():
@@ -62,41 +47,58 @@ def finaliza():
 
 #Função desenhar na tela
 def desenha(window: pygame.Surface, assets, state):
+    
+    #Play song
     if not state['song_playing']:
         pygame.mixer.music.play()
         state['song_playing'] = True
 
-    state['events'] = [x for x in state['synthsewers_timings'] if x <= state['time_elapsed']],
-    #print(state['events'])
+    #Process Past Timings
+    state['events'] = [event for event in state['synthsewers_blue_right'] if event <= state['time_elapsed']]
+    
+    #BG Blit
+    if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
+        bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
 
-    window.fill((255, 150, 0))
-    bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
-
-    #Desenhos vão aqui!
+    #BG Frames
     if state['time_elapsed'] % 8 == 0:
         state['bgframe'] += 1
         if state['bgframe'] > 5:
             state['bgframe'] = 0
 
-    if state['protagframe'] > 5:
-        state['protagframe'] = 0
-        state['protagbounce'] = False
-    protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
-    
-    if state['time_elapsed'] % 30 == 0:
-        assets['metronome'].play()
+    #Sword
+    if state['slash_right']:
+        right = window.blit(assets['sword_right'], (0,0))
+    if state['slash_left']:
+        left = window.blit(assets['sword_left'], (0,0))
+    if state['slash_up']:
+        up = window.blit(assets['sword_up'], (0,0))
+    if state['slash_down']:
+        down = window.blit(assets['sword_down'], (0,0))
 
     if state['time_elapsed'] % 60 == 0:
         state['protagbounce'] = True
+
+    if state['protagframe'] > 5:
+        state['protagframe'] = 0
+        state['protagbounce'] = False
+    if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
+        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
+    
+    if state['time_elapsed'] % 30 == 0:
+        assets['metronome'].play()
 
     if state['protagbounce']:
         if state['time_elapsed'] % 5 == 0:
             state['protagframe'] += 1
 
+
+    #Dramatic Lines
     if state['time_elapsed'] <= 14*60:
         pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
         pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
 
+    #3, 2, 1, HIT IT!
     if state['time_elapsed'] >= 14*60 and state['time_elapsed'] < 15*60:
         pygame.draw.rect(window, (0,0,0), (0,0,1280,720))
     if state['time_elapsed'] >= 15*60 and state['time_elapsed'] < 15.25*60:
@@ -112,10 +114,10 @@ def desenha(window: pygame.Surface, assets, state):
         pygame.draw.rect(window, (255,255,255), (0,0,1280,720))
         count_hit_it = window.blit(assets['hit_it'], (0, 0))
 
-    state['time_elapsed'] += 1
-    print(state['time_elapsed'])
+    state['time_elapsed'] += 1 * (1/state['dt'])
+    #print(state['time_elapsed'])
 
-    if state['time_elapsed'] in state['synthsewers_timings']:
+    if state['time_elapsed'] in state['synthsewers_blue_right']:
         assets['hitsound'].play()
 
     pygame.display.update()
@@ -123,13 +125,43 @@ def desenha(window: pygame.Surface, assets, state):
 #Atualizar estado
 def atualiza_estado(state):
 
-    state['clock'].tick(state['fps'])
-
     for event in pygame.event.get():
+        
+        #Quit event
         if event.type == pygame.QUIT:
             return False
+
+        #Every other event
         else:
-            pass
+
+            #Right Sword
+            if event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
+                assets['right_test'].play()
+                state['slash_right'] = True
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
+                state['slash_right'] = False
+
+            #Left Sword
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
+                assets['left_test'].play()
+                state['slash_left'] = True
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
+                state['slash_left'] = False
+            
+            #Up Sword
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_UP or event.key == pygame.K_w):
+                assets['up_test'].play()
+                state['slash_up'] = True
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_UP or event.key == pygame.K_w):
+                state['slash_up'] = False
+
+            #Down Sword
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
+                assets['down_test'].play()
+                state['slash_down'] = True
+            elif event.type == pygame.KEYUP and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
+                state['slash_down'] = False
+
             #Eventos vão aqui!
             #a
     
@@ -139,6 +171,12 @@ def atualiza_estado(state):
 def gameloop(window, assets, state):
     while atualiza_estado(state):
         desenha(window, assets, state)
+        clock.tick(fps)
+        now = time.time()
+        dt = now - state['prev_time']
+        state['prev_time'] = now
+        pygame.time.delay(5)
+        #print(round(clock.get_fps(),2))
 
 
 if __name__ == '__main__':
