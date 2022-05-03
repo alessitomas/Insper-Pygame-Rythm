@@ -22,6 +22,7 @@ def inicializa():
 
     state = {
             'protagframe': 0,
+            'enemy_blue_frame': 0,
             'bgframe': 0,
             'time_elapsed': 0,
             'song_playing': False,
@@ -76,22 +77,31 @@ def desenha(window: pygame.Surface, assets, state):
     if state['slash_down']:
         down = window.blit(assets['sword_down'], (0,0))
 
+    #Enemies
+    if state['time_elapsed'] % 5 == 0:
+            state['enemy_blue_frame'] += 1
+    if state['enemy_blue_frame'] > 5:
+        state['enemy_blue_frame'] = 0
+
+    #Protag Bounce
     if state['time_elapsed'] % 60 == 0:
         state['protagbounce'] = True
 
-    if state['protagframe'] > 5:
-        state['protagframe'] = 0
-        state['protagbounce'] = False
-    if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
-        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
-    
-    if state['time_elapsed'] % 30 == 0:
-        assets['metronome'].play()
-
+    #Protag Frames
     if state['protagbounce']:
         if state['time_elapsed'] % 5 == 0:
             state['protagframe'] += 1
-
+    if state['protagframe'] > 5:
+        state['protagframe'] = 0
+        state['protagbounce'] = False
+    
+    #Render Protag and Enemies
+    if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
+        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
+        enemy = window.blit(assets['enemy_blue'][state['enemy_blue_frame']], (567, 181))
+    #Metronome
+    if state['time_elapsed'] % 30 == 0:
+        assets['metronome'].play()
 
     #Dramatic Lines
     if state['time_elapsed'] <= 14*60:
