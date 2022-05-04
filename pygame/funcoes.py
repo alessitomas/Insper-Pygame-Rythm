@@ -42,12 +42,10 @@ def load_assets():
         'hitsound': pygame.mixer.Sound('music/hitsound.ogg'),
         'metronome': pygame.mixer.Sound('music/metronome.ogg'),
         
-        'up_test': pygame.mixer.Sound('music/up_test.ogg'),
-        'down_test': pygame.mixer.Sound('music/down_test.ogg'),
-        'left_test': pygame.mixer.Sound('music/left_test.ogg'),
-        'right_test': pygame.mixer.Sound('music/right_test.ogg'),
+        'swoosh': pygame.mixer.Sound('music/swoosh.ogg'),
 
         'monsterspawn': pygame.mixer.Sound('music/monsterspawn.ogg'),
+        'monsterdeath': pygame.mixer.Sound('music/monsterdeath.ogg'),
 
         'swordup': pygame.image.load('sprites/swordup.png'),
         'sworddown': pygame.image.load('sprites/sworddown.png'),
@@ -58,7 +56,7 @@ def load_assets():
 
 
 def enemy_move(origin, x, y, stop_time):
-    
+
     #Initial Movement
 
     #Up
@@ -83,7 +81,6 @@ def enemy_move(origin, x, y, stop_time):
         if origin == 'up':
             if y <= 280:
                 y += 5
-
 
     
     new_coords = ((x, y), stop_time)

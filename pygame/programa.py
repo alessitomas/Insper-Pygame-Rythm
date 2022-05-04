@@ -37,6 +37,9 @@ def inicializa():
             'stop_time': 0,
             'sword_time': 0,
             'hits_up': [],
+            'dead_time': 0,
+            'pop': True,
+            'life_state_up': 'not_spawned',
         }
 
     #Timings from seconds to FPS
@@ -105,19 +108,41 @@ def desenha(window: pygame.Surface, assets, state):
     for time in state['synthsewers_up']:
         if state['time_elapsed'] == time:
             assets['monsterspawn'].play()
+            state['stop_time'] = 0
+            state['life_state_up'] = 'alive'
+        
+    if state['life_state_up'] == 'alive':
+        state['enemy_up_y'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[0][1] #update y
+        state['stop_time'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[1] #update stop time
+        #state['life_state_up'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[2]
 
-    if state['time_elapsed'] >= 120:
-        state['enemy_up_y'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[0][1]
-        state['stop_time'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[1]
-    
+    if state['enemy_up_y'] >= 280:
+        state['life_state_up'] = 'damage'
+        state['enemy_up_y'] = -63
+        assets['monsterdeath'].play()        
+
+    print(state['life_state_up'])
+
+    if state['life_state_up'] == 'damage':
+        assets['hitsound'].play()
+        state['life_state_up'] = 'not_spawned'
+
     #Render Protag and Enemies
     if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
-        enemy_up = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_up_x'], state['enemy_up_y']))
-        enemy_dead_up = window.blit(assets['enemy_dead'], (601, 150))
-        enemy_dead_down = window.blit(assets['enemy_dead'], (601, 490))
-        enemy_dead_left = window.blit(assets['enemy_dead'], (400, 321))
-        enemy_dead_left = window.blit(assets['enemy_dead'], (800, 321))
-        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
+
+        if state['life_state_up'] != 'damage':
+            enemy_up = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_up_x'], state['enemy_up_y']))
+        elif state['dead_time'] <= 30 and state['life_state_up'] != 'damage':
+            enemy_dead_up = window.blit(assets['enemy_dead'], (601, 150))
+            state['dead_time'] += 1
+        
+        #enemy_dead_down = window.blit(assets['enemy_dead'], (601, 490))
+        
+        #enemy_dead_left = window.blit(assets['enemy_dead'], (400, 321))
+        
+        #enemy_dead_left = window.blit(assets['enemy_dead'], (800, 321))
+        
+        #protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
 
     #Metronome
     if state['time_elapsed'] % 30 == 0:
@@ -166,19 +191,19 @@ def atualiza_estado(state):
 
             #Right Sword
             if event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
-                assets['right_test'].play()
+                assets['swoosh'].play()
                 state['slash_direction'] = 'right'
                 state['sword_time'] = 0
 
             #Left Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
-                assets['left_test'].play()
+                assets['swoosh'].play()
                 state['slash_direction'] = 'left'
                 state['sword_time'] = 0
 
             #Up Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_UP or event.key == pygame.K_w):
-                assets['up_test'].play()
+                assets['swoosh'].play()
                 state['slash_direction'] = 'up'
                 state['sword_time'] = 0
                 state['hits_up'].append(state['time_elapsed'])
@@ -186,7 +211,7 @@ def atualiza_estado(state):
 
             #Down Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
-                assets['down_test'].play()
+                assets['swoosh'].play()
                 state['slash_direction'] = 'down'
                 state['sword_time'] = 0
 
