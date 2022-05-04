@@ -21,26 +21,7 @@ def inicializa():
 
     assets = load_assets()
 
-    state = {
-            'protagframe': 0,
-            'enemy_frame': 0,
-            'bgframe': 0,
-            'time_elapsed': 0,
-            'song_playing': False,
-            'protagbounce': False,
-            'synthsewers_up': [2, 6, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
-            'dt': 1,
-            'prev_time': time.time(),
-            'slash_direction': 'none',
-            'enemy_up_x': 607,
-            'enemy_up_y': -63,
-            'stop_time': 0,
-            'sword_time': 0,
-            'hits_up': [],
-            'dead_time': 0,
-            'pop': True,
-            'life_state_up': 'not_spawned',
-        }
+    state = load_states()
 
     #Timings from seconds to FPS
     state['synthsewers_up'] = [timing * fps for timing in state['synthsewers_up']]
@@ -63,9 +44,13 @@ def desenha(window: pygame.Surface, assets, state):
         #pygame.mixer.music.play()
         state['song_playing'] = True
 
+
+
     #Process Past Timings
-    state['events'] = [event for event in state['synthsewers_up'] if event <= state['time_elapsed']]
+    #state['events'] = [event for event in state['synthsewers_up'] if event <= state['time_elapsed']]
     
+
+
     #BG Blit
     if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
         bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
@@ -75,6 +60,8 @@ def desenha(window: pygame.Surface, assets, state):
         state['bgframe'] += 1
         if state['bgframe'] > 5:
             state['bgframe'] = 0
+
+
 
     #Sword
     if state['slash_direction'] == 'right':
@@ -98,7 +85,9 @@ def desenha(window: pygame.Surface, assets, state):
         state['protagframe'] = 0
         state['protagbounce'] = False
 
-    #Enemies
+
+
+    #Enemy Frames
     if state['time_elapsed'] % 5 == 0:
             state['enemy_frame'] += 1
     if state['enemy_frame'] > 5:
@@ -121,7 +110,7 @@ def desenha(window: pygame.Surface, assets, state):
         state['enemy_up_y'] = -63
         assets['monsterdeath'].play()        
 
-    print(state['life_state_up'])
+    #print(state['life_state_up'])
 
     if state['life_state_up'] == 'damage':
         assets['hitsound'].play()
@@ -170,10 +159,6 @@ def desenha(window: pygame.Surface, assets, state):
         count_hit_it = window.blit(assets['hit_it'], (0, 0))
 
     state['time_elapsed'] += 1 * (1/state['dt'])
-    #print(state['time_elapsed'])
-
-    #if state['time_elapsed'] in state['synthsewers_up']:
-    #    assets['hitsound'].play()
 
     pygame.display.update()
 
@@ -206,8 +191,12 @@ def atualiza_estado(state):
                 assets['swoosh'].play()
                 state['slash_direction'] = 'up'
                 state['sword_time'] = 0
+                state['hits_up'] = []
                 state['hits_up'].append(state['time_elapsed'])
-                #print(state['hits_up'])
+                print(state['hits_up'])
+
+
+            
 
             #Down Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
@@ -221,6 +210,12 @@ def atualiza_estado(state):
     if state['sword_time'] >= 18:
         state['slash_direction'] = 'none'
         state['sword_time'] = 0
+
+    for timing in state['synthsewers_up']:
+        if state['time_elapsed'] >= timing + 0.3:
+            state['synthsewers_up'].remove(timing)
+
+    #print(state['synthsewers_up'])
 
     #print(state['slash_direction'])
     #print(state['sword_time'])

@@ -1,6 +1,8 @@
 import pygame
+import time
 
 def load_assets():
+    
     loadedassets = {
         
         'protag': [
@@ -51,9 +53,36 @@ def load_assets():
         'sworddown': pygame.image.load('sprites/sworddown.png'),
         'swordleft': pygame.image.load('sprites/swordleft.png'),
         'swordright': pygame.image.load('sprites/swordright.png'),
+        
+        'jooj': pygame.image.load('sprites/jooj.gif'),
         }
+
     return loadedassets
 
+def load_states():
+    
+    loaded_states = {
+            'protagframe': 0,
+            'enemy_frame': 0,
+            'bgframe': 0,
+            'time_elapsed': 0,
+            'song_playing': False,
+            'protagbounce': False,
+            'synthsewers_up': [2, 6, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
+            'dt': 1,
+            'prev_time': time.time(),
+            'slash_direction': 'none',
+            'enemy_up_x': 607,
+            'enemy_up_y': -63,
+            'stop_time': 0,
+            'sword_time': 0,
+            'hits_up': [],
+            'dead_time': 0,
+            'pop': True,
+            'life_state_up': 'not_spawned',
+            }
+
+    return loaded_states
 
 def enemy_move(origin, x, y, stop_time):
 
@@ -86,3 +115,13 @@ def enemy_move(origin, x, y, stop_time):
     new_coords = ((x, y), stop_time)
     #print(new_coords)
     return new_coords
+
+#def check_timing(synthsewers_timings, player_timings):
+    #if 
+
+
+
+
+
+
+
