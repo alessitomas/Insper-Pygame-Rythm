@@ -1,11 +1,5 @@
 import pygame
 
-def test_time_very_close():
-    elapsed_time = 0.5
-    game = pygame.Game()
-    game.update(elapsed_time)
-    assert game.happening == [0.5]
-
 def load_assets():
     loadedassets = {
         
@@ -26,6 +20,8 @@ def load_assets():
             pygame.image.load('sprites/enemy_blue5.png'),
             pygame.image.load('sprites/enemy_blue6.png'),
             ],
+
+        'enemy_dead': pygame.image.load('sprites/enemy_dead.png'),
         
         'sewerbg': [
             pygame.image.load('sprites/bg1.png'),
@@ -51,6 +47,8 @@ def load_assets():
         'left_test': pygame.mixer.Sound('music/left_test.ogg'),
         'right_test': pygame.mixer.Sound('music/right_test.ogg'),
 
+        'monsterspawn': pygame.mixer.Sound('music/monsterspawn.ogg'),
+
         'swordup': pygame.image.load('sprites/swordup.png'),
         'sworddown': pygame.image.load('sprites/sworddown.png'),
         'swordleft': pygame.image.load('sprites/swordleft.png'),
@@ -59,3 +57,35 @@ def load_assets():
     return loadedassets
 
 
+def enemy_move(origin, x, y, stop_time):
+    
+    #Initial Movement
+
+    #Up
+    if origin == 'up':
+        if y <= 40:
+            y += 10
+        else:
+            stop_time += 1
+
+    #Down
+    if origin == 'down':
+        if y >= 680:
+            y -= 10
+        else:
+            stop_time += 1
+
+
+    #Second Movement
+
+    #Up
+    if stop_time >= 26:
+        if origin == 'up':
+            if y <= 280:
+                y += 5
+
+
+    
+    new_coords = ((x, y), stop_time)
+    #print(new_coords)
+    return new_coords

@@ -6,14 +6,6 @@ from funcoes import *
 fps = 60
 clock = pygame.time.Clock()
 
-def enemy_move(origin, x, y):
-    if origin == 'up':
-        if y <= 100:
-            y += 15
-    new_coords = (x, y)
-    print(new_coords)
-    return new_coords
-
 
 #Inicialização do Game
 def inicializa():
@@ -31,18 +23,24 @@ def inicializa():
 
     state = {
             'protagframe': 0,
-            'enemy_blue_frame': 0,
+            'enemy_frame': 0,
             'bgframe': 0,
             'time_elapsed': 0,
             'song_playing': False,
             'protagbounce': False,
-            'synthsewers_blue_right': [19*60, 23*60, 27*60, 27.5*60, 31*60, 31.5*60, 33*60, 35*60, 35.5*60, 37*60, 39*60, 39.5*60, 41*60, 43*60, 43.5*60, 45*60, 47*60, 47.5*60, 49.5*60, 51.5*60, 52*60, 53*60],
+            'synthsewers_up': [2, 6, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
             'dt': 1,
             'prev_time': time.time(),
             'slash_direction': 'none',
             'enemy_up_x': 607,
             'enemy_up_y': -63,
+            'stop_time': 0,
+            'sword_time': 0,
+            'hits_up': [],
         }
+
+    #Timings from seconds to FPS
+    state['synthsewers_up'] = [timing * fps for timing in state['synthsewers_up']]
 
     #para carregar os assets sem lag depois
     #time.sleep(3)
@@ -59,11 +57,11 @@ def desenha(window: pygame.Surface, assets, state):
     
     #Play song
     if not state['song_playing']:
-        pygame.mixer.music.play()
+        #pygame.mixer.music.play()
         state['song_playing'] = True
 
     #Process Past Timings
-    state['events'] = [event for event in state['synthsewers_blue_right'] if event <= state['time_elapsed']]
+    state['events'] = [event for event in state['synthsewers_up'] if event <= state['time_elapsed']]
     
     #BG Blit
     if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
@@ -99,15 +97,26 @@ def desenha(window: pygame.Surface, assets, state):
 
     #Enemies
     if state['time_elapsed'] % 5 == 0:
-            state['enemy_blue_frame'] += 1
-    if state['enemy_blue_frame'] > 5:
-        state['enemy_blue_frame'] = 0
+            state['enemy_frame'] += 1
+    if state['enemy_frame'] > 5:
+        state['enemy_frame'] = 0
     
-    state['enemy_up_y'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'])[1]
+    #Enemy Movement and Sound
+    for time in state['synthsewers_up']:
+        if state['time_elapsed'] == time:
+            assets['monsterspawn'].play()
+
+    if state['time_elapsed'] >= 120:
+        state['enemy_up_y'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[0][1]
+        state['stop_time'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[1]
     
     #Render Protag and Enemies
     if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
-        enemy_up = window.blit(assets['enemy_blue'][state['enemy_blue_frame']], (state['enemy_up_x'], state['enemy_up_y']))
+        enemy_up = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_up_x'], state['enemy_up_y']))
+        enemy_dead_up = window.blit(assets['enemy_dead'], (601, 150))
+        enemy_dead_down = window.blit(assets['enemy_dead'], (601, 490))
+        enemy_dead_left = window.blit(assets['enemy_dead'], (400, 321))
+        enemy_dead_left = window.blit(assets['enemy_dead'], (800, 321))
         protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
 
     #Metronome
@@ -138,8 +147,8 @@ def desenha(window: pygame.Surface, assets, state):
     state['time_elapsed'] += 1 * (1/state['dt'])
     #print(state['time_elapsed'])
 
-    if state['time_elapsed'] in state['synthsewers_blue_right']:
-        assets['hitsound'].play()
+    #if state['time_elapsed'] in state['synthsewers_up']:
+    #    assets['hitsound'].play()
 
     pygame.display.update()
 
@@ -159,31 +168,37 @@ def atualiza_estado(state):
             if event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
                 assets['right_test'].play()
                 state['slash_direction'] = 'right'
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and state['slash_direction'] == 'right':
-                state['slash_direction'] = 'none'
+                state['sword_time'] = 0
 
             #Left Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
                 assets['left_test'].play()
                 state['slash_direction'] = 'left'
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_LEFT or event.key == pygame.K_a) and state['slash_direction'] == 'left':
-                state['slash_direction'] = 'none'
-            
+                state['sword_time'] = 0
+
             #Up Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_UP or event.key == pygame.K_w):
                 assets['up_test'].play()
                 state['slash_direction'] = 'up'
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_UP or event.key == pygame.K_w) and state['slash_direction'] == 'up':
-                state['slash_direction'] = 'none'
+                state['sword_time'] = 0
+                state['hits_up'].append(state['time_elapsed'])
+                #print(state['hits_up'])
 
             #Down Sword
             elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
                 assets['down_test'].play()
                 state['slash_direction'] = 'down'
-            elif event.type == pygame.KEYUP and (event.key == pygame.K_DOWN or event.key == pygame.K_s) and state['slash_direction'] == 'down':
-                state['slash_direction'] = 'none'
+                state['sword_time'] = 0
 
             #Eventos vão aqui!
+    if state['slash_direction'] != 'none':
+        state['sword_time'] += 1
+    if state['sword_time'] >= 18:
+        state['slash_direction'] = 'none'
+        state['sword_time'] = 0
+
+    #print(state['slash_direction'])
+    #print(state['sword_time'])
     
     return True
 
