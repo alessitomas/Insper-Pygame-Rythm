@@ -1,59 +1,51 @@
 # Import do Pygame
 import pygame
 import time
+from funcoes import *
+
+fps = 60
+clock = pygame.time.Clock()
 
 
 #Inicialização do Game
 def inicializa():
+    
     pygame.init()
     pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
     pygame.mixer.init()
-    window = pygame.display.set_mode((1280, 720))
+    window = pygame.display.set_mode((1280, 720), vsync=1)
     #window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption('Tenor Blade')
     icon = pygame.image.load('sprites/tabicon.png')
     pygame.display.set_icon(icon)
 
-    assets = {
-        'protag': [
-            pygame.image.load('sprites/protag1.png'),
-            pygame.image.load('sprites/protag2.png'),
-            pygame.image.load('sprites/protag3.png'),
-            pygame.image.load('sprites/protag4.png'),
-            pygame.image.load('sprites/protag5.png'),
-            pygame.image.load('sprites/protag6.png')
-            ],
-        'sewerbg': [
-            pygame.image.load('sprites/bg1.png'),
-            pygame.image.load('sprites/bg2.png'),
-            pygame.image.load('sprites/bg3.png'),
-            pygame.image.load('sprites/bg4.png'),
-            pygame.image.load('sprites/bg5.png'),
-            pygame.image.load('sprites/bg6.png'),
-            ],
-        '3': pygame.image.load('sprites/3.png'),
-        '2': pygame.image.load('sprites/2.png'),
-        '1': pygame.image.load('sprites/1.png'),
-        'hit_it': pygame.image.load('sprites/hit_it.png'),
-        'synthsewers': pygame.mixer.music.load('music/synthsewers.ogg'),
-        'hitsound': pygame.mixer.Sound('music/hitsound.ogg'),
-        'metronome': pygame.mixer.Sound('music/metronome.ogg'),
-        }
+    assets = load_assets()
 
-    state = {'fps': 60,
+    state = {
             'protagframe': 0,
+            'enemy_frame': 0,
             'bgframe': 0,
             'time_elapsed': 0,
             'song_playing': False,
             'protagbounce': False,
-            'synthsewers_timings': [19*60, 23*60, 27*60, 27.5*60, 31*60, 31.5*60, 33*60, 35*60, 35.5*60, 37*60, 39*60, 39.5*60, 41*60, 43*60, 43.5*60, 45*60, 47*60, 47.5*60, 49.5*60, 51.5*60, 52*60, 53*60],
-            'clock': pygame.time.Clock()
+            'synthsewers_up': [2, 6, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
+            'dt': 1,
+            'prev_time': time.time(),
+            'slash_direction': 'none',
+            'enemy_up_x': 607,
+            'enemy_up_y': -63,
+            'stop_time': 0,
+            'sword_time': 0,
+            'hits_up': [],
         }
 
-    time.sleep(0.3)
+    #Timings from seconds to FPS
+    state['synthsewers_up'] = [timing * fps for timing in state['synthsewers_up']]
+
+    #para carregar os assets sem lag depois
+    #time.sleep(3)
 
     return window, assets, state
-
 
 #Finalização do Game
 def finaliza():
@@ -62,41 +54,81 @@ def finaliza():
 
 #Função desenhar na tela
 def desenha(window: pygame.Surface, assets, state):
+    
+    #Play song
     if not state['song_playing']:
-        pygame.mixer.music.play()
+        #pygame.mixer.music.play()
         state['song_playing'] = True
 
-    state['events'] = [x for x in state['synthsewers_timings'] if x <= state['time_elapsed']],
-    #print(state['events'])
+    #Process Past Timings
+    state['events'] = [event for event in state['synthsewers_up'] if event <= state['time_elapsed']]
+    
+    #BG Blit
+    if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
+        bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
 
-    window.fill((255, 150, 0))
-    bg = window.blit(assets['sewerbg'][state['bgframe']], (0,0))
-
-    #Desenhos vão aqui!
+    #BG Frames
     if state['time_elapsed'] % 8 == 0:
         state['bgframe'] += 1
         if state['bgframe'] > 5:
             state['bgframe'] = 0
 
-    if state['protagframe'] > 5:
-        state['protagframe'] = 0
-        state['protagbounce'] = False
-    protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
-    
-    if state['time_elapsed'] % 30 == 0:
-        assets['metronome'].play()
+    #Sword
+    if state['slash_direction'] == 'right':
+        right = window.blit(assets['swordright'], (741,333))
+    elif state['slash_direction'] == 'left':
+        left = window.blit(assets['swordleft'], (417,333))
+    elif state['slash_direction'] == 'up':
+        up = window.blit(assets['swordup'], (612,150))
+    elif state['slash_direction'] == 'down':
+        down = window.blit(assets['sworddown'], (612,447))
 
+    #Protag Bounce
     if state['time_elapsed'] % 60 == 0:
         state['protagbounce'] = True
 
+    #Protag Frames
     if state['protagbounce']:
         if state['time_elapsed'] % 5 == 0:
             state['protagframe'] += 1
+    if state['protagframe'] > 5:
+        state['protagframe'] = 0
+        state['protagbounce'] = False
 
-    if state['time_elapsed'] <= 14*60:
-        pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
-        pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+    #Enemies
+    if state['time_elapsed'] % 5 == 0:
+            state['enemy_frame'] += 1
+    if state['enemy_frame'] > 5:
+        state['enemy_frame'] = 0
+    
+    #Enemy Movement and Sound
+    for time in state['synthsewers_up']:
+        if state['time_elapsed'] == time:
+            assets['monsterspawn'].play()
 
+    if state['time_elapsed'] >= 120:
+        state['enemy_up_y'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[0][1]
+        state['stop_time'] = enemy_move('up', state['enemy_up_x'], state['enemy_up_y'], state['stop_time'])[1]
+    
+    #Render Protag and Enemies
+    if state['time_elapsed'] <= 14*60 or state['time_elapsed'] >= 16*60:
+        enemy_up = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_up_x'], state['enemy_up_y']))
+        enemy_dead_up = window.blit(assets['enemy_dead'], (601, 150))
+        enemy_dead_down = window.blit(assets['enemy_dead'], (601, 490))
+        enemy_dead_left = window.blit(assets['enemy_dead'], (400, 321))
+        enemy_dead_left = window.blit(assets['enemy_dead'], (800, 321))
+        protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
+
+    #Metronome
+    if state['time_elapsed'] % 30 == 0:
+        assets['metronome'].play()
+
+    #Dramatic Lines
+    #if state['time_elapsed'] <= 14*60:
+    #    pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
+    #    pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+
+    #3, 2, 1, HIT IT!
     if state['time_elapsed'] >= 14*60 and state['time_elapsed'] < 15*60:
         pygame.draw.rect(window, (0,0,0), (0,0,1280,720))
     if state['time_elapsed'] >= 15*60 and state['time_elapsed'] < 15.25*60:
@@ -112,26 +144,61 @@ def desenha(window: pygame.Surface, assets, state):
         pygame.draw.rect(window, (255,255,255), (0,0,1280,720))
         count_hit_it = window.blit(assets['hit_it'], (0, 0))
 
-    state['time_elapsed'] += 1
-    print(state['time_elapsed'])
+    state['time_elapsed'] += 1 * (1/state['dt'])
+    #print(state['time_elapsed'])
 
-    if state['time_elapsed'] in state['synthsewers_timings']:
-        assets['hitsound'].play()
+    #if state['time_elapsed'] in state['synthsewers_up']:
+    #    assets['hitsound'].play()
 
     pygame.display.update()
 
 #Atualizar estado
 def atualiza_estado(state):
 
-    state['clock'].tick(state['fps'])
-
     for event in pygame.event.get():
+        
+        #Quit event
         if event.type == pygame.QUIT:
             return False
+
+        #Every other event
         else:
-            pass
+
+            #Right Sword
+            if event.type == pygame.KEYDOWN and (event.key == pygame.K_RIGHT or event.key == pygame.K_d):
+                assets['right_test'].play()
+                state['slash_direction'] = 'right'
+                state['sword_time'] = 0
+
+            #Left Sword
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_LEFT or event.key == pygame.K_a):
+                assets['left_test'].play()
+                state['slash_direction'] = 'left'
+                state['sword_time'] = 0
+
+            #Up Sword
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_UP or event.key == pygame.K_w):
+                assets['up_test'].play()
+                state['slash_direction'] = 'up'
+                state['sword_time'] = 0
+                state['hits_up'].append(state['time_elapsed'])
+                #print(state['hits_up'])
+
+            #Down Sword
+            elif event.type == pygame.KEYDOWN and (event.key == pygame.K_DOWN or event.key == pygame.K_s):
+                assets['down_test'].play()
+                state['slash_direction'] = 'down'
+                state['sword_time'] = 0
+
             #Eventos vão aqui!
-            #a
+    if state['slash_direction'] != 'none':
+        state['sword_time'] += 1
+    if state['sword_time'] >= 18:
+        state['slash_direction'] = 'none'
+        state['sword_time'] = 0
+
+    #print(state['slash_direction'])
+    #print(state['sword_time'])
     
     return True
 
@@ -139,6 +206,12 @@ def atualiza_estado(state):
 def gameloop(window, assets, state):
     while atualiza_estado(state):
         desenha(window, assets, state)
+        clock.tick(fps)
+        now = time.time()
+        dt = now - state['prev_time']
+        state['prev_time'] = now
+        #pygame.time.delay(5)
+        #print(round(clock.get_fps(),2))
 
 
 if __name__ == '__main__':
