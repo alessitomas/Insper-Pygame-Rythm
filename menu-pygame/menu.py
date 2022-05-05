@@ -41,6 +41,8 @@ def finaliza():
 
 def desenha(window: pygame.Surface, assets, state):
     window.fill((0, 225, 225))
+    #background
+    
     
     text_surface = arial_font.render("TENOR BLADE", False, (0, 0, 0))
     window.blit(text_surface, (435, 30))
