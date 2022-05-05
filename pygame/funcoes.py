@@ -45,6 +45,7 @@ def load_assets():
         'metronome': pygame.mixer.Sound('music/metronome.ogg'),
         
         'swoosh': pygame.mixer.Sound('music/swoosh.ogg'),
+        'ouch': pygame.mixer.Sound('music/ouch.ogg'),
 
         'monsterspawn': pygame.mixer.Sound('music/monsterspawn.ogg'),
         'monsterdeath': pygame.mixer.Sound('music/monsterdeath.ogg'),
@@ -55,6 +56,7 @@ def load_assets():
         'swordright': pygame.image.load('sprites/swordright.png'),
         
         'jooj': pygame.image.load('sprites/jooj.gif'),
+
         }
 
     return loadedassets
@@ -62,25 +64,42 @@ def load_assets():
 def load_states():
     
     loaded_states = {
-            'protagframe': 0,
-            'enemy_frame': 0,
-            'bgframe': 0,
-            'time_elapsed': 0,
             'song_playing': False,
+
+            'protagframe': 0,
             'protagbounce': False,
-            'synthsewers_up': [2, 6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
-            'synthsewers_up_inputs': [2, 6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
-            'dt': 1,
-            'prev_time': time.time(),
-            'slash_direction': 'none',
+            
+            'enemy_frame': 0,
+            
             'enemy_up_x': 607,
             'enemy_up_y': -63,
-            'stop_time': 0,
-            'sword_time': 0,
-            'hits_up': [],
-            'dead_time': 0,
-            'pop': True,
+            'dead_time_up': 0,
+            'stop_time_up': 0,
             'life_state_up': 'not_spawned',
+
+            'enemy_down_x': 607,
+            'enemy_down_y': 720,
+            'dead_time_down': 0,
+            'stop_time_down': 0,
+            'life_state_down': 'not_spawned',
+
+            'bgframe': 0,
+            
+            'time_elapsed': 0,
+            'dt': 1,
+            'prev_time': time.time(),
+
+            'synthsewers_up': [6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
+            'synthsewers_up_inputs': [6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
+            'synthsewers_down': [2],
+            'synthsewers_down_inputs': [2],
+
+            'slash_direction': 'none',
+            'sword_time': 0,
+
+            'hits_up': [],
+            'hits_down': [],
+
             }
 
     return loaded_states
@@ -98,7 +117,7 @@ def enemy_move(origin, x, y, stop_time):
 
     #Down
     if origin == 'down':
-        if y >= 680:
+        if y >= 577:
             y -= 10
         else:
             stop_time += 1
@@ -107,10 +126,16 @@ def enemy_move(origin, x, y, stop_time):
     #Second Movement
 
     #Up
-    if stop_time >= 26:
-        if origin == 'up':
+    if origin == 'up':
+        if stop_time >= 26:
             if y <= 280:
                 y += 5
+
+    #Down
+    if origin == 'down':
+        if stop_time >= 26:
+            if y >= 440:
+                y -= 5
 
     
     new_coords = ((x, y), stop_time)
@@ -121,6 +146,7 @@ def check_timing(synthsewers_timings, player_timings):
 
     for timing in synthsewers_timings:
         if player_timings[0] >= timing - 18 and player_timings[0] <= timing + 18:
+            synthsewers_timings.remove(synthsewers_timings[0])
             return True
         else:
             return False
