@@ -11,27 +11,61 @@ CIANO = (0, 225, 225)
 pygame.font.init() 
 papyrus_font = pygame.font.SysFont('papyrus', 50)
 arial_font = pygame.font.SysFont('franklingothicmedium', 75)
-background = pygame.image.load("img/menu.png")
+
 def inicializa():
+    pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
     pygame.init()
     w = pygame.display.set_mode((1280, 720), vsync=True, flags=pygame.SCALED)
-    pygame.key.set_repeat(50)
+    pygame.display.set_caption('Tenor Blade')
+    icon = pygame.image.load('img/tabicon.png')
+    pygame.display.set_icon(icon)
+    #pygame.key.set_repeat(50)
 
     assets = {
+        'background': pygame.image.load("img/menu.png"),
+
+        'logo': pygame.image.load("img/logo.png"),
+
+        'start': pygame.image.load("img/start.png"),
+        'start_select': pygame.image.load("img/start_select.png"),
+        'start_pt': pygame.image.load("img/start_pt.png"),
+        'start_select_pt': pygame.image.load("img/start_select_pt.png"),
+
+        'extras': pygame.image.load("img/extras.png"),
+        'extras_select': pygame.image.load("img/extras_select.png"),
+
+        'how_to_play': pygame.image.load("img/how_to_play.png"),
+        'how_to_play_select': pygame.image.load("img/how_to_play_select.png"),
+        'how_to_play_pt': pygame.image.load("img/how_to_play_pt.png"),
+        'how_to_play_select_pt': pygame.image.load("img/how_to_play_select_pt.png"),
+        
+        'options': pygame.image.load("img/options.png"),
+        'options_select': pygame.image.load("img/options_select.png"),
+        'options_pt': pygame.image.load("img/options_pt.png"),
+        'options_select_pt': pygame.image.load("img/options_select_pt.png"),
+
+        'credits': pygame.image.load("img/credits.png"),
+        'credits_select': pygame.image.load("img/credits_select.png"),
+        'credits_pt': pygame.image.load("img/credits_pt.png"),
+        'credits_select_pt': pygame.image.load("img/credits_select_pt.png"),
+
     }
 
     state = {
-         "cor": [ROSA,ROSA,ROSA,ROSA,ROSA], 
-         "rect_start_pos":[375, 150] , 
-         "rect_start_dimen":[500, 150], 
-         'retangulos_dimen':[350, 75],
-         'rect_extras_pos':[235, 350], 
-         'rect_how_pos':[675, 350], 
-         'rect_opt_pos':[225, 500], 
-         'rect_cred_pos':[675, 500], 
-         "estado": "inicial",
-         "tela":"inicial"
-         }
+        "rect_start_pos":[375, 150] , 
+        "rect_start_dimen":[500, 150], 
+        'retangulos_dimen':[350, 75],
+        'rect_extras_pos':[235, 350], 
+        'rect_how_pos':[675, 350], 
+        'rect_opt_pos':[225, 500], 
+        'rect_cred_pos':[675, 500], 
+        "estado": "inicial",
+        "tela":"inicial",
+        "menu_direction": 'left',
+
+        'lang': 'pt'
+
+        }
 
     return w, assets, state
 
@@ -41,33 +75,64 @@ def finaliza():
 
 
 def desenha(window: pygame.Surface, assets, state):
-    window.fill((0, 225, 225))
     #background
-    window.blit(background,(0,0))
+    #window.blit(assets['background'],(0,0))
     
-    
-    text_surface = arial_font.render("TENOR BLADE", False, (0, 0, 0))
-    window.blit(text_surface, (435, 30))
-    
-    pygame.draw.rect(window, state['cor'][0], pygame.Rect(state['rect_start_pos'], state['rect_start_dimen']))
-    text_surface = papyrus_font.render("START", False, (0, 0, 0))
-    window.blit(text_surface, (550, 200))
-    
-    pygame.draw.rect(window, state['cor'][1], pygame.Rect(state['rect_extras_pos'], state['retangulos_dimen']))
-    text_surface = papyrus_font.render("EXTRAS", False, (0, 0, 0))
-    window.blit(text_surface, (310, 365))
-    
-    pygame.draw.rect(window, state['cor'][2], pygame.Rect(state['rect_how_pos'], state['retangulos_dimen']))
-    text_surface = papyrus_font.render("HOW TO PLAY", False, (0, 0, 0))
-    window.blit(text_surface, (693, 365))
+    ref_test = window.blit(assets['background'], (0, 0))
 
-    pygame.draw.rect(window, state['cor'][3], pygame.Rect(state['rect_opt_pos'], state['retangulos_dimen']))
-    text_surface = papyrus_font.render("OPTIONS", False, (0, 0, 0))
-    window.blit(text_surface, (285, 515))
+    window.blit(assets['logo'], (399, 42))
     
-    pygame.draw.rect(window, state['cor'][4], pygame.Rect(state['rect_cred_pos'], state['retangulos_dimen']))
-    text_surface = papyrus_font.render("CREDITS", False, (0, 0, 0))
-    window.blit(text_surface, (735, 510))
+    if state['lang'] == 'eng':
+        if state['estado'] == 'start':
+            window.blit(assets['start_select'], (387, 213))
+        else:
+            window.blit(assets['start'], (387, 213))
+
+        if state['estado'] == 'extras':
+            window.blit(assets['extras_select'], (222, 405))
+        else:
+            window.blit(assets['extras'], (222, 405))
+
+        if state['estado'] == 'how':
+            window.blit(assets['how_to_play_select'], (711, 405))
+        else:
+            window.blit(assets['how_to_play'], (711, 405))
+
+        if state['estado'] == 'options':
+            window.blit(assets['options_select'], (222, 519))
+        else:
+            window.blit(assets['options'], (222, 519))
+
+        if state['estado'] == 'creditos':
+            window.blit(assets['credits_select'], (711, 519))
+        else:
+            window.blit(assets['credits'], (711, 519))
+
+    elif state['lang'] == 'pt':
+        if state['estado'] == 'start':
+            window.blit(assets['start_select_pt'], (387, 213))
+        else:
+            window.blit(assets['start_pt'], (387, 213))
+
+        if state['estado'] == 'extras':
+            window.blit(assets['extras_select'], (222, 405))
+        else:
+            window.blit(assets['extras'], (222, 405))
+
+        if state['estado'] == 'how':
+            window.blit(assets['how_to_play_select_pt'], (711, 405))
+        else:
+            window.blit(assets['how_to_play_pt'], (711, 405))
+
+        if state['estado'] == 'options':
+            window.blit(assets['options_select_pt'], (222, 519))
+        else:
+            window.blit(assets['options_pt'], (222, 519))
+
+        if state['estado'] == 'creditos':
+            window.blit(assets['credits_select_pt'], (711, 519))
+        else:
+            window.blit(assets['credits_pt'], (711, 519))
     
     pygame.display.update()
 
@@ -76,135 +141,99 @@ def atualiza_estado(state):
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             return False
-        if ev.type == pygame.KEYUP:
-            if ev.key == pygame.K_UP:
+        if ev.type == pygame.KEYDOWN:
+            
+            if ev.key == pygame.K_UP or ev.key == pygame.K_w:
                 if state["estado"] == "inicial":
-                    state["cor"][0] = AZUL
                     state["estado"] = "start"
 
                 elif state["estado"] == "start":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][3] = AZUL
-                    state["estado"] = "options"
+                    if state['menu_direction'] == 'left':
+                        state["estado"] = "options"
+                    elif state['menu_direction'] == 'right':
+                        state["estado"] = "creditos"
                 
                 elif state["estado"] == "extras":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][0] = AZUL
                     state["estado"] = "start"
 
                 elif state["estado"] == "options":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][1] = AZUL
                     state["estado"] = "extras"
 
                 elif state["estado"] == "how":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][0] = AZUL
                     state["estado"] = "start"
                 
                 elif state["estado"] == "how":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][0] = AZUL
                     state["estado"] = "start"
 
                 elif state["estado"] == "creditos":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][2] = AZUL
                     state["estado"] = "how"
                
                  
-            if ev.key == pygame.K_RIGHT:
+            if ev.key == pygame.K_RIGHT or ev.key == pygame.K_d:
                 
                 if state["estado"] == "inicial":
-                    state["cor"][2] = AZUL
-                    state["estado"] = "how"
+                    state["estado"] = "start"
 
                 elif state["estado"] == "how":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][1] = AZUL
                     state["estado"] = "extras"
                 
                 elif state["estado"] == "creditos":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][3] = AZUL
                     state["estado"] = "options"
                 
                 
                 elif state["estado"] == "start":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][2] = AZUL
                     state["estado"] = "how"
                 
                 elif state["estado"] == "extras":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][2] = AZUL
                     state["estado"] = "how"
 
                 elif state["estado"] == "options":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][4] = AZUL
                     state["estado"] = "creditos"
 
-            if ev.key == pygame.K_LEFT:
+            if ev.key == pygame.K_LEFT or ev.key == pygame.K_a:
                 
                 if state["estado"] == "inicial":
-                    state["cor"][1] = AZUL
+                    state["estado"] = "start"
+
+                elif state["estado"] == "start":
                     state["estado"] = "extras"
                 
                 elif state["estado"] == "extras":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][2] = AZUL
                     state["estado"] = "how"
                 
                 elif state["estado"] == "extras":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][2] = AZUL
                     state["estado"] = "how"
                 
                 elif state["estado"] == "options":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][4] = AZUL
                     state["estado"] = "creditos"
                 
                 elif state["estado"] == "how":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][1] = AZUL
                     state["estado"] = "extras"
                 
                 elif state["estado"] == "creditos":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][3] = AZUL
                     state["estado"] = "options"
 
-            if ev.key == pygame.K_DOWN:
+            if ev.key == pygame.K_DOWN or ev.key == pygame.K_s:
                 
                 if state["estado"] == "inicial":
-                    state["cor"][3] = AZUL
-                    state["estado"] = "options"
+                    state["estado"] = "start"
                 
                 elif state["estado"] == "start":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][1] = AZUL
-                    state["estado"] = "extras"
-                
+                    if state['menu_direction'] == 'left':
+                        state["estado"] = "extras"
+                    elif state['menu_direction'] == 'right':
+                        state["estado"] = "how"
+
                 elif state["estado"] == "options":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][0] = AZUL
                     state["estado"] = "start"
 
                 elif state["estado"] == "creditos":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][0] = AZUL
                     state["estado"] = "start"
 
                 elif state["estado"] == "extras":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][3] = AZUL
                     state["estado"] = "options"
 
                 elif state["estado"] == "how":
-                    state["cor"] = [ROSA] * 5
-                    state["cor"][4] = AZUL
                     state["estado"] = "creditos"
 
             if ev.key == pygame.K_RETURN:
@@ -217,8 +246,11 @@ def atualiza_estado(state):
                         state["tela"] = "options"
                     if state["estado"]  == "creditos":
                         state["tela"] = "creditos"
-                    
-                         
+
+        if state['estado'] == 'extras' or state['estado'] == 'options':
+            state['menu_direction'] = 'left'
+        if state['estado'] == 'how' or state['estado'] == 'creditos':
+            state['menu_direction'] = 'right'          
     
     return True
 
