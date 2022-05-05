@@ -3,6 +3,13 @@ body{
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; ;
     display: flex;
     flex-direction: column;
+    
+    width: 100%;
+    
+    background-image: linear-gradient(to top, rgba(51,170,121, 0.55),rgba(249, 42, 99, 0.55)),url(img/menucopy.png);
+    background-size: cover;
+    background-position: center;
+
 }
 .inicio{
     display: flex;
@@ -20,7 +27,7 @@ h1{
     font-family: fantasy;
     border: 1px solid black;
     border-radius: 7px;
-    background: rgb(253, 194, 204);
+    background: rgba(234, 133, 162, 0.99);
     padding: 0.75%;  
 }
 .cabeçalho2{
@@ -31,7 +38,7 @@ h1{
     font-family: fantasy;
     border: 1px solid black;
     border-radius: 7px;
-    background: rgb(253, 194, 204);
+    background: rgb(249, 42, 99, 0.3);
     padding: 0.15%;  
 }
 button{

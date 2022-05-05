@@ -11,6 +11,7 @@ CIANO = (0, 225, 225)
 pygame.font.init() 
 papyrus_font = pygame.font.SysFont('papyrus', 50)
 arial_font = pygame.font.SysFont('franklingothicmedium', 75)
+background = pygame.image.load("img/menu.png")
 def inicializa():
     pygame.init()
     w = pygame.display.set_mode((1280, 720), vsync=True, flags=pygame.SCALED)
@@ -42,6 +43,7 @@ def finaliza():
 def desenha(window: pygame.Surface, assets, state):
     window.fill((0, 225, 225))
     #background
+    window.blit(background,(0,0))
     
     
     text_surface = arial_font.render("TENOR BLADE", False, (0, 0, 0))
