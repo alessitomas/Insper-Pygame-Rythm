@@ -68,7 +68,8 @@ def load_states():
             'time_elapsed': 0,
             'song_playing': False,
             'protagbounce': False,
-            'synthsewers_up': [2, 6, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
+            'synthsewers_up': [2, 6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
+            'synthsewers_up_inputs': [2, 6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
             'dt': 1,
             'prev_time': time.time(),
             'slash_direction': 'none',
@@ -113,11 +114,16 @@ def enemy_move(origin, x, y, stop_time):
 
     
     new_coords = ((x, y), stop_time)
-    #print(new_coords)
+
     return new_coords
 
-#def check_timing(synthsewers_timings, player_timings):
-    #if 
+def check_timing(synthsewers_timings, player_timings):
+
+    for timing in synthsewers_timings:
+        if player_timings[0] >= timing - 18 and player_timings[0] <= timing + 18:
+            return True
+        else:
+            return False
 
 
 
