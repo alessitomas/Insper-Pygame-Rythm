@@ -14,6 +14,7 @@ body{
 .inicio{
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .cabeçalho1{
@@ -63,7 +64,8 @@ iframe{
 .meio1{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    align-items: center;
 }
 .images{
     display: flex;
