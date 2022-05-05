@@ -226,9 +226,9 @@ def desenha(window: pygame.Surface, assets, state):
 
 
     #Dramatic Lines
-    #if state['time_elapsed'] <= 14*60:
-    #    pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
-    #    pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+    if state['time_elapsed'] <= 14*60:
+        pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
+        pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
 
 
     #3, 2, 1, HIT IT!
