@@ -1,9 +1,10 @@
 from credits import gameloop_credits
 from extra import *
 import pygame
-
+import funcoes
 from how import gameloop_how
 from options import gameloop_options
+import programa
 AZUL = (0,0,255)
 ROSA = (255, 0, 127)
 CIANO = (0, 225, 225)
@@ -246,7 +247,9 @@ def atualiza_estado(state):
                         state["tela"] = "options"
                     if state["estado"]  == "creditos":
                         state["tela"] = "creditos"
-
+                    if state["estado"]  == "start":
+                        state["tela"] = "start"
+        
         if state['estado'] == 'extras' or state['estado'] == 'options':
             state['menu_direction'] = 'left'
         if state['estado'] == 'how' or state['estado'] == 'creditos':
@@ -272,7 +275,7 @@ if __name__ == '__main__':
             jogando = gameloop(window, assets, state)
         
         elif state["tela"] == "start":
-            pass
+            jogando = programa.game_main(window)
     
         elif state["tela"] == "extras":
             jogando = gameloop_extra(window,assets,state)

@@ -38,6 +38,32 @@ def inicializa():
 
     return window, assets, state
 
+def inicializa_subjogo():
+    
+    pygame.init()
+    pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
+    pygame.mixer.init()
+    #window = pygame.display.set_mode((1280, 720), vsync=1)
+    #window = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    pygame.display.set_caption('Tenor Blade')
+    icon = pygame.image.load('sprites/tabicon.png')
+    pygame.display.set_icon(icon)
+
+    assets = load_assets()
+
+    state = load_states()
+
+    #Timings from seconds to FPS
+    state['synthsewers_up'] = [timing * fps for timing in state['synthsewers_up']]
+    state['synthsewers_up_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_up_inputs']]
+    state['synthsewers_down'] = [timing * fps for timing in state['synthsewers_down']]
+    state['synthsewers_down_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_down_inputs']]
+    state['synthsewers_right'] = [timing * fps for timing in state['synthsewers_right']]
+    state['synthsewers_right_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_right_inputs']]
+    state['synthsewers_left'] = [timing * fps for timing in state['synthsewers_left']]
+    state['synthsewers_left_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_left_inputs']]
+
+    return  assets, state
 
 
 #Finalização do Game
@@ -268,7 +294,7 @@ def desenha(window: pygame.Surface, assets, state):
 
 
 #Atualizar estado
-def atualiza_estado(state):
+def atualiza_estado(state, assets):
 
 
     #Play song
@@ -405,8 +431,8 @@ def atualiza_estado(state):
 
 
 #Gameloop
-def gameloop(window, assets, state):
-    while atualiza_estado(state):
+def gameloop_jogo(window, assets, state):
+    while atualiza_estado(state, assets):
         desenha(window, assets, state)
         clock.tick(fps)
         now = time.time()
@@ -414,9 +440,13 @@ def gameloop(window, assets, state):
         state['prev_time'] = now
 
 
+def game_main(window):
+    assets, state = inicializa_subjogo()
+    return gameloop_jogo(window, assets, state)
+    #finaliza()
 
 #name
 if __name__ == '__main__':
     window, assets, state = inicializa()
-    gameloop(window, assets, state)
+    gameloop_jogo(window, assets, state)
     finaliza()
