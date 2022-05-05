@@ -31,6 +31,10 @@ def inicializa():
     state['synthsewers_up_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_up_inputs']]
     state['synthsewers_down'] = [timing * fps for timing in state['synthsewers_down']]
     state['synthsewers_down_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_down_inputs']]
+    state['synthsewers_right'] = [timing * fps for timing in state['synthsewers_right']]
+    state['synthsewers_right_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_right_inputs']]
+    state['synthsewers_left'] = [timing * fps for timing in state['synthsewers_left']]
+    state['synthsewers_left_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_left_inputs']]
 
     return window, assets, state
 
@@ -44,7 +48,7 @@ def finaliza():
 
 #Função desenhar na tela
 def desenha(window: pygame.Surface, assets, state):
-    
+
 
     #Time Elapsed
     state['time_elapsed'] += 1 * (1/state['dt'])
@@ -81,6 +85,18 @@ def desenha(window: pygame.Surface, assets, state):
             assets['monsterspawn'].play()
             state['stop_time_down'] = 0
             state['life_state_down'] = 'alive'
+    #Right
+    for time in state['synthsewers_right']:
+        if state['time_elapsed'] == time:
+            assets['monsterspawn'].play()
+            state['stop_time_right'] = 0
+            state['life_state_right'] = 'alive'
+    #Left
+    for time in state['synthsewers_left']:
+        if state['time_elapsed'] == time:
+            assets['monsterspawn'].play()
+            state['stop_time_left'] = 0
+            state['life_state_left'] = 'alive'
 
     #Death Animation
     #Up
@@ -97,7 +113,7 @@ def desenha(window: pygame.Surface, assets, state):
     #Down
     if state['life_state_down'] == 'dead':
         if state['dead_time_down'] == 0:
-            state['enemy_down_y'] = -720
+            state['enemy_down_y'] = 720
             state['dead_time_down'] += 1
         elif state['dead_time_down'] <= 30:
             enemy_dead_down = window.blit(assets['enemy_dead'], (601, 490))
@@ -105,6 +121,28 @@ def desenha(window: pygame.Surface, assets, state):
         else:
             state['dead_time_down'] = 0
             state['life_state_down'] = 'not_spawned'
+    #Right
+    if state['life_state_right'] == 'dead':
+        if state['dead_time_right'] == 0:
+            state['enemy_right_x'] = 1280
+            state['dead_time_right'] += 1
+        elif state['dead_time_right'] <= 30:
+            enemy_dead_right = window.blit(assets['enemy_dead'], (800, 321))
+            state['dead_time_right'] += 1
+        else:
+            state['dead_time_right'] = 0
+            state['life_state_right'] = 'not_spawned'
+    #Left
+    if state['life_state_left'] == 'dead':
+        if state['dead_time_left'] == 0:
+            state['enemy_left_x'] = -66
+            state['dead_time_left'] += 1
+        elif state['dead_time_left'] <= 30:
+            enemy_dead_left = window.blit(assets['enemy_dead'], (400, 321))
+            state['dead_time_left'] += 1
+        else:
+            state['dead_time_left'] = 0
+            state['life_state_left'] = 'not_spawned'
 
     #Move Animation
     #Up
@@ -117,6 +155,16 @@ def desenha(window: pygame.Surface, assets, state):
         state['dead_time_down'] = 0
         state['enemy_down_y'] = enemy_move('down', state['enemy_down_x'], state['enemy_down_y'], state['stop_time_down'])[0][1] #update y
         state['stop_time_down'] = enemy_move('down', state['enemy_down_x'], state['enemy_down_y'], state['stop_time_down'])[1] #update stop time
+    #Right
+    if state['life_state_right'] == 'alive':
+        state['dead_time_right'] = 0
+        state['enemy_right_x'] = enemy_move('right', state['enemy_right_x'], state['enemy_right_y'], state['stop_time_right'])[0][0] #update x
+        state['stop_time_right'] = enemy_move('right', state['enemy_right_x'], state['enemy_right_y'], state['stop_time_right'])[1] #update stop time
+    #Left
+    if state['life_state_left'] == 'alive':
+        state['dead_time_left'] = 0
+        state['enemy_left_x'] = enemy_move('left', state['enemy_left_x'], state['enemy_left_y'], state['stop_time_left'])[0][0] #update x
+        state['stop_time_left'] = enemy_move('left', state['enemy_left_x'], state['enemy_left_y'], state['stop_time_left'])[1] #update stop time
 
     #Damage
     #Up
@@ -126,6 +174,7 @@ def desenha(window: pygame.Surface, assets, state):
         assets['ouch'].play()
         state['synthsewers_up_inputs'].remove(state['synthsewers_up_inputs'][0])    
     if state['life_state_up'] == 'damage':
+        state['health'] -= 1
         state['life_state_up'] = 'not_spawned'
     #Down
     if state['enemy_down_y'] <= 440:
@@ -134,7 +183,26 @@ def desenha(window: pygame.Surface, assets, state):
         assets['ouch'].play()
         state['synthsewers_down_inputs'].remove(state['synthsewers_down_inputs'][0])    
     if state['life_state_down'] == 'damage':
+        state['health'] -= 1
         state['life_state_down'] = 'not_spawned'
+    #Right
+    if state['enemy_right_x'] <= 687:
+        state['life_state_right'] = 'damage'
+        state['enemy_right_x'] = 1280
+        assets['ouch'].play()
+        state['synthsewers_right_inputs'].remove(state['synthsewers_right_inputs'][0])    
+    if state['life_state_right'] == 'damage':
+        state['health'] -= 1
+        state['life_state_right'] = 'not_spawned'
+    #Left
+    if state['enemy_left_x'] >= 527:
+        state['life_state_left'] = 'damage'
+        state['enemy_left_x'] = -66
+        assets['ouch'].play()
+        state['synthsewers_left_inputs'].remove(state['synthsewers_left_inputs'][0])    
+    if state['life_state_left'] == 'damage':
+        state['health'] -= 1
+        state['life_state_left'] = 'not_spawned'
 
 
     #Render Protag and Enemies
@@ -144,23 +212,23 @@ def desenha(window: pygame.Surface, assets, state):
             enemy_up = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_up_x'], state['enemy_up_y']))
         if state['life_state_down'] != 'damage':
             enemy_down = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_down_x'], state['enemy_down_y']))
-        
-        #enemy_dead_left = window.blit(assets['enemy_dead'], (400, 321))
-        
-        #enemy_dead_left = window.blit(assets['enemy_dead'], (800, 321))
+        if state['life_state_right'] != 'damage':
+            enemy_right = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_right_x'], state['enemy_right_y']))
+        if state['life_state_left'] != 'damage':
+            enemy_left = window.blit(assets['enemy_blue'][state['enemy_frame']], (state['enemy_left_x'], state['enemy_left_y']))
         
         protag = window.blit(assets['protag'][state['protagframe']], (577, 181))
 
 
     #Metronome
-    if state['time_elapsed'] % 30 == 0:
-        assets['metronome'].play()
+    #if state['time_elapsed'] % 30 == 0:
+    #    assets['metronome'].play()
 
 
     #Dramatic Lines
-    #if state['time_elapsed'] <= 14*60:
-    #    pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
-    #    pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+    if state['time_elapsed'] <= 14*60:
+        pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
+        pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
 
 
     #3, 2, 1, HIT IT!
@@ -180,6 +248,21 @@ def desenha(window: pygame.Surface, assets, state):
         count_hit_it = window.blit(assets['hit_it'], (0, 0))
 
 
+    #Hearts
+    if state['health'] == 1:
+        heart_1 = window.blit(assets['heart'], (30, 630))
+        heart_2 = window.blit(assets['heart_empty'], (120, 630))
+        heart_3 = window.blit(assets['heart_empty'], (210, 630))
+    elif state['health'] == 2:
+        heart_1 = window.blit(assets['heart'], (30, 630))
+        heart_2 = window.blit(assets['heart'], (120, 630))
+        heart_3 = window.blit(assets['heart_empty'], (210, 630))
+    elif state['health'] == 3:
+        heart_1 = window.blit(assets['heart'], (30, 630))
+        heart_2 = window.blit(assets['heart'], (120, 630))
+        heart_3 = window.blit(assets['heart'], (210, 630))
+
+
     pygame.display.update()
 
 
@@ -190,7 +273,7 @@ def atualiza_estado(state):
 
     #Play song
     if not state['song_playing']:
-        #pygame.mixer.music.play()
+        pygame.mixer.music.play()
         state['song_playing'] = True
 
 
@@ -224,6 +307,7 @@ def atualiza_estado(state):
     #Inputs
     for event in pygame.event.get():
         
+
         #Quit event
         if event.type == pygame.QUIT:
             return False
@@ -238,6 +322,13 @@ def atualiza_estado(state):
                 assets['swoosh'].play()
                 state['slash_direction'] = 'right'
                 state['sword_time'] = 0
+                state['hits_right'].append(state['time_elapsed'])
+
+                if check_timing(state['synthsewers_right_inputs'], state['hits_right']):
+                    assets['monsterdeath'].play()
+                    state['life_state_right'] = 'dead'
+                    
+                state['hits_right'] = []
 
 
             #Left Sword
@@ -245,6 +336,13 @@ def atualiza_estado(state):
                 assets['swoosh'].play()
                 state['slash_direction'] = 'left'
                 state['sword_time'] = 0
+                state['hits_left'].append(state['time_elapsed'])
+
+                if check_timing(state['synthsewers_left_inputs'], state['hits_left']):
+                    assets['monsterdeath'].play()
+                    state['life_state_left'] = 'dead'
+                    
+                state['hits_left'] = []
 
 
             #Up Sword
@@ -291,6 +389,14 @@ def atualiza_estado(state):
     for timing in state['synthsewers_down']:
         if state['time_elapsed'] >= timing + 18:
             state['synthsewers_down'].remove(timing)
+    #Right
+    for timing in state['synthsewers_right']:
+        if state['time_elapsed'] >= timing + 18:
+            state['synthsewers_right'].remove(timing)
+    #Left
+    for timing in state['synthsewers_left']:
+        if state['time_elapsed'] >= timing + 18:
+            state['synthsewers_left'].remove(timing)
     
 
     

@@ -54,6 +54,10 @@ def load_assets():
         'sworddown': pygame.image.load('sprites/sworddown.png'),
         'swordleft': pygame.image.load('sprites/swordleft.png'),
         'swordright': pygame.image.load('sprites/swordright.png'),
+
+        'heart': pygame.image.load('sprites/heart.png'),
+        'heart_empty': pygame.image.load('sprites/heart_empty.png'),
+        'hearts_reference': pygame.image.load('sprites/hearts_reference.png'),
         
         'jooj': pygame.image.load('sprites/jooj.gif'),
 
@@ -83,22 +87,42 @@ def load_states():
             'stop_time_down': 0,
             'life_state_down': 'not_spawned',
 
+            'enemy_right_x': 1280,
+            'enemy_right_y': 321,
+            'dead_time_right': 0,
+            'stop_time_right': 0,
+            'life_state_right': 'not_spawned',
+
+            'enemy_left_x': -66,
+            'enemy_left_y': 321,
+            'dead_time_left': 0,
+            'stop_time_left': 0,
+            'life_state_left': 'not_spawned',
+
             'bgframe': 0,
             
             'time_elapsed': 0,
             'dt': 1,
             'prev_time': time.time(),
 
-            'synthsewers_up': [6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
-            'synthsewers_up_inputs': [6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
-            'synthsewers_down': [2, 4, 8],
-            'synthsewers_down_inputs': [2, 4, 8],
+            'synthsewers_up': [26, 32, 42.5, 46, 50.5, 56, 60, 66.25, 70.25, 72.5, 76.5, 78.5, 84, 86, 94],
+            'synthsewers_up_inputs': [26, 32, 42.5, 46, 50.5, 56, 60, 66.25, 70.25, 72.5, 76.5, 78.5, 84, 86, 94],
+            'synthsewers_down': [26.5, 36, 42, 46.5, 52, 58, 63, 66, 70.5, 74.5, 78.25, 80.5, 86.5, 94.25],
+            'synthsewers_down_inputs': [26.5, 36, 42, 46.5, 52, 58, 63, 66, 70.5, 74.5, 78.25, 80.5, 86.5, 94.25],
+            'synthsewers_right': [18, 30.5, 34, 38.5, 44, 51, 62.5, 68, 72, 78, 80, 84.5, 94.75],
+            'synthsewers_right_inputs': [18, 30.5, 34, 38.5, 44, 51, 62.5, 68, 72, 78, 80, 84.5, 94.75],
+            'synthsewers_left': [22, 30, 34.5, 38, 40, 48.5, 58.5, 62, 64, 70, 76, 82.5, 86.25, 94.5],
+            'synthsewers_left_inputs': [22, 30, 34.5, 38, 40, 48.5, 58.5, 62, 64, 70, 76, 82.5, 86.25, 94.5],
 
             'slash_direction': 'none',
             'sword_time': 0,
 
             'hits_up': [],
             'hits_down': [],
+            'hits_right': [],
+            'hits_left': [],
+
+            'health': 3
 
             }
 
@@ -122,6 +146,20 @@ def enemy_move(origin, x, y, stop_time):
         else:
             stop_time += 1
 
+    #Right
+    if origin == 'right':
+        if x >= 927:
+            x -= 40
+        else:
+            stop_time += 1
+
+    #Left
+    if origin == 'left':
+        if x <= 287:
+            x += 40
+        else:
+            stop_time += 1
+
 
     #Second Movement
 
@@ -136,6 +174,18 @@ def enemy_move(origin, x, y, stop_time):
         if stop_time >= 26:
             if y >= 440:
                 y -= 5
+
+    #Right
+    if origin == 'right':
+        if stop_time >= 26:
+            if x >= 687:
+                x -= 5
+
+    #Left
+    if origin == 'left':
+        if stop_time >= 26:
+            if x <= 527:
+                x += 5
 
     
     new_coords = ((x, y), stop_time)
