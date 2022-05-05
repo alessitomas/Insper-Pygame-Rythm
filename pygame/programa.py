@@ -4,7 +4,6 @@ import time
 from funcoes import *
 
 
-
 fps = 60
 clock = pygame.time.Clock()
 
@@ -62,6 +61,8 @@ def inicializa_subjogo():
     state['synthsewers_right_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_right_inputs']]
     state['synthsewers_left'] = [timing * fps for timing in state['synthsewers_left']]
     state['synthsewers_left_inputs'] = [(timing * fps) + 60 for timing in state['synthsewers_left_inputs']]
+
+    pygame.time.wait(1000)
 
     return  assets, state
 
@@ -299,6 +300,7 @@ def atualiza_estado(state, assets):
 
     #Play song
     if not state['song_playing']:
+        pygame.mixer.music.load('music/synthsewers.ogg')
         pygame.mixer.music.play()
         state['song_playing'] = True
 
@@ -424,8 +426,6 @@ def atualiza_estado(state, assets):
         if state['time_elapsed'] >= timing + 18:
             state['synthsewers_left'].remove(timing)
     
-
-    
     return True
 
 
@@ -438,6 +438,25 @@ def gameloop_jogo(window, assets, state):
         now = time.time()
         dt = now - state['prev_time']
         state['prev_time'] = now
+
+        #Game Over
+        if state['health'] <= 0:
+            gameover = window.blit(assets['gameover'], (0,0))
+            pygame.mixer.music.stop()
+            pygame.display.update()
+            pygame.time.wait(5000)
+            return False
+
+        #Win!
+        if state['time_elapsed'] >= 6000:
+            gameover = window.blit(assets['win'], (0,0))
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('music/menuloop.ogg')
+            pygame.mixer.music.play()
+            assets['yipee'].play()
+            pygame.display.update()
+            pygame.time.wait(8000)
+            return False
 
 
 def game_main(window):

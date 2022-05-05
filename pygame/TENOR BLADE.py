@@ -5,13 +5,27 @@ import funcoes
 from how import gameloop_how
 from options import gameloop_options
 import programa
-AZUL = (0,0,255)
-ROSA = (255, 0, 127)
-CIANO = (0, 225, 225)
-# fonte Stackoverflow
-pygame.font.init() 
-papyrus_font = pygame.font.SysFont('papyrus', 50)
-arial_font = pygame.font.SysFont('franklingothicmedium', 75)
+
+
+state_menu = {
+        "rect_start_pos":[375, 150] , 
+        "rect_start_dimen":[500, 150], 
+        'retangulos_dimen':[350, 75],
+        'rect_extras_pos':[235, 350], 
+        'rect_how_pos':[675, 350], 
+        'rect_opt_pos':[225, 500], 
+        'rect_cred_pos':[675, 500], 
+        "estado": "inicial",
+        "tela":"inicial",
+        "menu_direction": 'left',
+
+        'lang': 'eng',
+        'lang_direction': 'left',
+
+        'soundtest_select': 'synthsewers'
+
+        }
+
 
 def inicializa():
     pygame.mixer.pre_init(frequency=44100, size=-16, channels=2, buffer=512)
@@ -50,25 +64,19 @@ def inicializa():
         'credits_pt': pygame.image.load("img/credits_pt.png"),
         'credits_select_pt': pygame.image.load("img/credits_select_pt.png"),
 
+        'escape': pygame.image.load("img/escape.png"),
+        'escape_pt': pygame.image.load("img/escape_pt.png"),
+
+        'enter': pygame.image.load("img/enter.png"),
+        'enter_pt': pygame.image.load("img/enter_pt.png"),
+
     }
+    
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load('music/menuloop.ogg')
+    pygame.mixer.music.play(loops = -1)
 
-    state = {
-        "rect_start_pos":[375, 150] , 
-        "rect_start_dimen":[500, 150], 
-        'retangulos_dimen':[350, 75],
-        'rect_extras_pos':[235, 350], 
-        'rect_how_pos':[675, 350], 
-        'rect_opt_pos':[225, 500], 
-        'rect_cred_pos':[675, 500], 
-        "estado": "inicial",
-        "tela":"inicial",
-        "menu_direction": 'left',
-
-        'lang': 'pt'
-
-        }
-
-    return w, assets, state
+    return w, assets, state_menu
 
 
 def finaliza():
@@ -134,7 +142,8 @@ def desenha(window: pygame.Surface, assets, state):
             window.blit(assets['credits_select_pt'], (711, 519))
         else:
             window.blit(assets['credits_pt'], (711, 519))
-    
+
+
     pygame.display.update()
 
 
@@ -272,21 +281,36 @@ if __name__ == '__main__':
     window, assets, state = inicializa()
     while jogando:
         if state["tela"] == "inicial":
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('music/menuloop.ogg')
+            pygame.mixer.music.play(loops = -1)
             jogando = gameloop(window, assets, state)
         
         elif state["tela"] == "start":
             jogando = programa.game_main(window)
     
         elif state["tela"] == "extras":
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('music/options.ogg')
+            pygame.mixer.music.play(loops = -1)
             jogando = gameloop_extra(window,assets,state)
        
         elif state["tela"] == "how":
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('music/options.ogg')
+            pygame.mixer.music.play(loops = -1)
             jogando = gameloop_how(window,assets,state)
         
         elif state["tela"] == "options":
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('music/options.ogg')
+            pygame.mixer.music.play(loops = -1)
             jogando = gameloop_options(window,assets,state)
         
         elif state["tela"] == "creditos":
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('music/options.ogg')
+            pygame.mixer.music.play(loops = -1)
             jogando = gameloop_credits(window,assets,state)
             
     finaliza()

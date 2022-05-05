@@ -58,6 +58,11 @@ def load_assets():
         'heart': pygame.image.load('sprites/heart.png'),
         'heart_empty': pygame.image.load('sprites/heart_empty.png'),
         'hearts_reference': pygame.image.load('sprites/hearts_reference.png'),
+
+        'gameover': pygame.image.load('sprites/gameover.png'),
+        'win': pygame.image.load('sprites/win.png'),
+
+        'yipee': pygame.mixer.Sound('music/yipee.ogg'),
         
         }
 

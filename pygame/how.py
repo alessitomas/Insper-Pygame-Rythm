@@ -1,11 +1,17 @@
 import pygame
 # fonte Stackoverflow
-CIANO = (0, 225, 225)
-image1 = pygame.image.load('img/game.kill.png')
+escape = pygame.image.load('img/escape.png')
+escape_pt = pygame.image.load('img/escape_pt.png')
+background = pygame.image.load('img/menu.png')
+tutorial = pygame.image.load('img/tutorial.png')
 def desenha_how(window: pygame.Surface, assets, state):
-    window.fill(CIANO)
-   
-    window.blit(image1, (225, 150))
+
+    window.blit(tutorial, (0, 0))
+    
+    if state['lang'] == 'eng':
+        window.blit(escape, (0, 0))
+    elif state['lang'] == 'pt':
+        window.blit(escape_pt, (0, 0))
     
     pygame.display.update()
     
@@ -16,7 +22,7 @@ def atualiza_estado_how(state):
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             return False
-        if ev.type == pygame.KEYUP:
+        if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_ESCAPE:
                 state["tela"] = "inicial"
                 
