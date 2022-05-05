@@ -121,6 +121,7 @@ def check_timing(synthsewers_timings, player_timings):
 
     for timing in synthsewers_timings:
         if player_timings[0] >= timing - 18 and player_timings[0] <= timing + 18:
+            synthsewers_timings.remove(synthsewers_timings[0])
             return True
         else:
             return False

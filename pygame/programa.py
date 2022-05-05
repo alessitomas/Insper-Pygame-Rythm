@@ -114,7 +114,10 @@ def desenha(window: pygame.Surface, assets, state):
     if state['enemy_up_y'] >= 280:
         state['life_state_up'] = 'damage'
         state['enemy_up_y'] = -63
-        assets['hitsound'].play()        
+        assets['hitsound'].play()
+        state['synthsewers_up_inputs'].remove(state['synthsewers_up_inputs'][0])
+        
+    #print(state['synthsewers_up'].remove(state['synthsewers_up_inputs'][0]))
 
     if state['life_state_up'] == 'damage':
         #assets['hitsound'].play()
