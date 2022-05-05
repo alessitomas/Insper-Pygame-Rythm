@@ -16,7 +16,9 @@ def atualiza_estado_extra(state):
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             return False
-        
+        if ev.type == pygame.KEYUP:
+            if ev.key == pygame.K_ESCAPE:
+                state["tela"] = "inicial"
                 
                 
     
@@ -26,7 +28,8 @@ def atualiza_estado_extra(state):
 
 def gameloop_extra(window, assets, state):
     while atualiza_estado_extra(state):
-        
+            if state["tela"] != "extras":
+                return True
             desenha_extra(window, assets, state)
          
             
