@@ -91,8 +91,8 @@ def load_states():
 
             'synthsewers_up': [6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
             'synthsewers_up_inputs': [6, 10, 18, 22, 26, 26.5, 30, 30.5, 32, 34, 34.5, 36, 38, 38.5, 40, 42, 42.5, 44, 46, 46.5, 48.5, 50.5, 51, 52],
-            'synthsewers_down': [2],
-            'synthsewers_down_inputs': [2],
+            'synthsewers_down': [2, 4, 8],
+            'synthsewers_down_inputs': [2, 4, 8],
 
             'slash_direction': 'none',
             'sword_time': 0,
