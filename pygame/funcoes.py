@@ -54,6 +54,10 @@ def load_assets():
         'sworddown': pygame.image.load('sprites/sworddown.png'),
         'swordleft': pygame.image.load('sprites/swordleft.png'),
         'swordright': pygame.image.load('sprites/swordright.png'),
+
+        'heart': pygame.image.load('sprites/heart.png'),
+        'heart_empty': pygame.image.load('sprites/heart_empty.png'),
+        'hearts_reference': pygame.image.load('sprites/hearts_reference.png'),
         
         'jooj': pygame.image.load('sprites/jooj.gif'),
 
@@ -117,6 +121,8 @@ def load_states():
             'hits_down': [],
             'hits_right': [],
             'hits_left': [],
+
+            'health': 3
 
             }
 

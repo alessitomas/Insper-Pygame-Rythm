@@ -174,6 +174,7 @@ def desenha(window: pygame.Surface, assets, state):
         assets['ouch'].play()
         state['synthsewers_up_inputs'].remove(state['synthsewers_up_inputs'][0])    
     if state['life_state_up'] == 'damage':
+        state['health'] -= 1
         state['life_state_up'] = 'not_spawned'
     #Down
     if state['enemy_down_y'] <= 440:
@@ -182,6 +183,7 @@ def desenha(window: pygame.Surface, assets, state):
         assets['ouch'].play()
         state['synthsewers_down_inputs'].remove(state['synthsewers_down_inputs'][0])    
     if state['life_state_down'] == 'damage':
+        state['health'] -= 1
         state['life_state_down'] = 'not_spawned'
     #Right
     if state['enemy_right_x'] <= 687:
@@ -190,6 +192,7 @@ def desenha(window: pygame.Surface, assets, state):
         assets['ouch'].play()
         state['synthsewers_right_inputs'].remove(state['synthsewers_right_inputs'][0])    
     if state['life_state_right'] == 'damage':
+        state['health'] -= 1
         state['life_state_right'] = 'not_spawned'
     #Left
     if state['enemy_left_x'] >= 527:
@@ -198,6 +201,7 @@ def desenha(window: pygame.Surface, assets, state):
         assets['ouch'].play()
         state['synthsewers_left_inputs'].remove(state['synthsewers_left_inputs'][0])    
     if state['life_state_left'] == 'damage':
+        state['health'] -= 1
         state['life_state_left'] = 'not_spawned'
 
 
@@ -222,9 +226,9 @@ def desenha(window: pygame.Surface, assets, state):
 
 
     #Dramatic Lines
-    if state['time_elapsed'] <= 14*60:
-        pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
-        pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
+    #if state['time_elapsed'] <= 14*60:
+    #    pygame.draw.rect(window, (0,0,0), (0,0,1280,150))
+    #    pygame.draw.rect(window, (0,0,0), (0,440,1280,280))
 
 
     #3, 2, 1, HIT IT!
@@ -242,6 +246,21 @@ def desenha(window: pygame.Surface, assets, state):
     if state['time_elapsed'] >= 15.75*60 and state['time_elapsed'] < 16*60:
         pygame.draw.rect(window, (255,255,255), (0,0,1280,720))
         count_hit_it = window.blit(assets['hit_it'], (0, 0))
+
+
+    #Hearts
+    if state['health'] == 1:
+        heart_1 = window.blit(assets['heart'], (30, 630))
+        heart_2 = window.blit(assets['heart_empty'], (120, 630))
+        heart_3 = window.blit(assets['heart_empty'], (210, 630))
+    elif state['health'] == 2:
+        heart_1 = window.blit(assets['heart'], (30, 630))
+        heart_2 = window.blit(assets['heart'], (120, 630))
+        heart_3 = window.blit(assets['heart_empty'], (210, 630))
+    elif state['health'] == 3:
+        heart_1 = window.blit(assets['heart'], (30, 630))
+        heart_2 = window.blit(assets['heart'], (120, 630))
+        heart_3 = window.blit(assets['heart'], (210, 630))
 
 
     pygame.display.update()
@@ -288,6 +307,7 @@ def atualiza_estado(state):
     #Inputs
     for event in pygame.event.get():
         
+
         #Quit event
         if event.type == pygame.QUIT:
             return False
