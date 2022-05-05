@@ -1,11 +1,11 @@
 import pygame
 # fonte Stackoverflow
-
-
+CIANO = (0, 225, 225)
+image1 = pygame.image.load('img/game.kill.png')
 def desenha_how(window: pygame.Surface, assets, state):
-    window.fill(((255, 165, 0)))
+    window.fill(CIANO)
    
-    
+    window.blit(image1, (225, 150))
     
     pygame.display.update()
     

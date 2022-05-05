@@ -1,9 +1,9 @@
 import pygame
 # fonte Stackoverflow
-
+CIANO = (0, 225, 225)
 image1 = pygame.image.load('img/game.png')
 def desenha_credits(window: pygame.Surface, assets, state):
-    window.fill(((255, 0, 127)))
+    window.fill(CIANO)
    
     window.blit(image1, (225, 150))
     

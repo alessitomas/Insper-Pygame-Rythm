@@ -1,9 +1,9 @@
 import pygame
 # fonte Stackoverflow
-
+CIANO = (0, 225, 225)
 
 def desenha_options(window: pygame.Surface, assets, state):
-    window.fill(((255, 0, 0)))
+    window.fill(CIANO)
    
     
     

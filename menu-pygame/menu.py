@@ -6,6 +6,7 @@ from how import gameloop_how
 from options import gameloop_options
 AZUL = (0,0,255)
 ROSA = (255, 0, 127)
+CIANO = (0, 225, 225)
 # fonte Stackoverflow
 pygame.font.init() 
 papyrus_font = pygame.font.SysFont('papyrus', 50)
