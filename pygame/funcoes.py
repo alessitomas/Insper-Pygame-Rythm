@@ -59,8 +59,6 @@ def load_assets():
         'heart_empty': pygame.image.load('sprites/heart_empty.png'),
         'hearts_reference': pygame.image.load('sprites/hearts_reference.png'),
         
-        'jooj': pygame.image.load('sprites/jooj.gif'),
-
         }
 
     return loadedassets
