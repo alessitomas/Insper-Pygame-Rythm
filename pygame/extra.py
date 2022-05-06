@@ -1,44 +1,39 @@
 import pygame
 from pygame import mixer
 mixer.init()
-AZUL = (0,0,255)
-CIANO = (0, 225, 225)
-# fonte Stackoverflow
+
+escape = pygame.image.load('img/escape.png')
+escape_pt = pygame.image.load('img/escape_pt.png')
+background = pygame.image.load('img/menu.png')
+
+synthsewers_box = pygame.image.load('img/synthsewers_box.png')
+menu_box = pygame.image.load('img/menu_box.png')
+options_box = pygame.image.load('img/options_box.png')
+
 state_extra = {
-    "rect_pos_audio1":[800, 150] , 
-    "rect_dimen_audio1":[350, 75], 
-    "play1_pos" : [740, 220],
-    "play1_dimen" : [50, 10],
     "estado": "inicial",
-    "cor" : [AZUL] * 3
 }
 image_jooj = pygame.image.load('img/jooj.gif')
-image_play1 = pygame.image.load('img/play-black.png')
-image_play2 = pygame.image.load('img/play-black.png')
-image_sound = pygame.image.load('img/wave-soundcopy.tiff')
-#mixer.music.load("song.mp3")
+
+
 def desenha_extra(window: pygame.Surface, assets, state):
-    window.fill(CIANO)
-   
-    # pygame.draw.rect(window,(255,255,255), pygame.Rect(state_extra['rect_pos_audio1'], state_extra['rect_dimen_audio1']))
-   
-    # audio 1
-    window.blit(image_sound, (850, 160))
 
-    window.blit(image_play1, (740, 160))
-    pygame.draw.rect(window,(state_extra["cor"][0]), pygame.Rect(state_extra['play1_pos'], state_extra['play1_dimen']))
-    
-    window.blit(image_jooj, (225, 150))
+    window.blit(background, (0, 0))
+    if state['lang'] == 'eng':
+        window.blit(escape, (0, 0))
+    elif state['lang'] == 'pt':
+        window.blit(escape_pt, (0, 0))
+   
+    if state['soundtest_select'] == 'synthsewers':
+        window.blit(synthsewers_box, (579, 285))
+    elif state['soundtest_select'] == 'menu':
+        window.blit(menu_box, (579, 285))
+    elif state['soundtest_select'] == 'options':
+        window.blit(options_box, (579, 285))
+
+
+    window.blit(image_jooj, (200, 237))
     pygame.display.update()
-    
-    window.blit(image_play2, (900, 160))
-
-   
-
-
-    
-
-    
 
 
     pygame.display.update()
@@ -49,19 +44,39 @@ def atualiza_estado_extra(state):
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             return False
-        if ev.type == pygame.KEYUP:
+        if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_ESCAPE:
                 state["tela"] = "inicial"
-            if ev.key == pygame.K_DOWN:
-                if state_extra["estado"] == "inicial":
-                    state_extra["cor"][0] = (0,0,0)
-                    
-
+            elif ev.key == pygame.K_RIGHT or ev.key == pygame.K_d:
+                if state['soundtest_select'] == 'synthsewers':
+                    state['soundtest_select'] = 'menu'
+                elif state['soundtest_select'] == 'menu':
+                    state['soundtest_select'] = 'options'
+                elif state['soundtest_select'] == 'options':
+                    state['soundtest_select'] = 'synthsewers'
+            elif ev.key == pygame.K_LEFT or ev.key == pygame.K_a:
+                if state['soundtest_select'] == 'synthsewers':
+                    state['soundtest_select'] = 'options'
+                elif state['soundtest_select'] == 'options':
+                    state['soundtest_select'] = 'menu'
+                elif state['soundtest_select'] == 'menu':
+                    state['soundtest_select'] = 'synthsewers'
             
+            if ev.key == pygame.K_RETURN:
+                if state['soundtest_select'] == 'synthsewers':
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('music/synthsewers.ogg')
+                    pygame.mixer.music.play(loops = -1)
+                elif state['soundtest_select'] == 'menu':
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('music/menuloop.ogg')
+                    pygame.mixer.music.play(loops = -1)
+                elif state['soundtest_select'] == 'options':
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('music/options.ogg')
+                    pygame.mixer.music.play(loops = -1)
+         
                 
-                
-    
-    
     return True
 
 

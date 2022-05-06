@@ -1,5 +1,5 @@
 Thanks for downloading Tenor Blade!
-If you wish to run the game, open "menu.py" using Visual Studio Code or any editor that can run Python.
+If you wish to run the game, open "TENOR BLADE.py", located in the "pygame" folder, using Visual Studio Code or any editor that can run Python.
 The game is controlled entirely (including the menus) using WASD or the arrow keys, so keep that in mind.
 Credits are available in game, but just in case:
 
@@ -9,7 +9,7 @@ Tomás Rodrigues Alessi - programming
 
 
 Obrigado por baixar Tenor Blade!
-Se deseja rodar o jogo, abra "menu.py" usando o Visual Studio Code ou algum outro editor que rode Python.
+Se deseja rodar o jogo, abra "TENOR BLADE.py", localizado na pasta "pygame", usando o Visual Studio Code ou algum outro editor que rode Python.
 O jogo é controlado inteiramente (incluindo os menus) usando WASD ou as setas, então tenha isso em mente.
 Créditos estão disponíveis no jogo, mas só para garantir:
 
