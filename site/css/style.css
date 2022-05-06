@@ -14,21 +14,20 @@ body{
 .inicio{
     display: flex;
     flex-direction: row;
-    justify-content: center;
 }
 
 .cabeçalho1{
     display: flex;
     justify-content: center;
     background-color: rgb(40, 40, 40);
-    border-radius: 10px
+    border-radius: 7px
 }
 h1{
     margin: 0.5%;
     font-family: fantasy;
     border: 1px solid black;
     border-radius: 7px;
-    background: rgba(234, 133, 162, 0.99);
+    background: rgb(254, 255, 254);
     padding: 0.75%;  
 }
 .cabeçalho2{
@@ -42,34 +41,100 @@ h1{
     background: rgb(249, 42, 99, 0.3);
     padding: 0.15%;  
 }
-button{
+a.botao{
+    color: black;
+    text-decoration: none;
     display: flex;
     flex-direction: row;
     margin: 0.5%;
     border: 1px solid black;
     border-radius: 7px;
     background: rgb(255, 255, 255);
-    padding: 1%; 
+    padding: 1%;
+    cursor: pointer;
 }
 
 .descricao{
+    margin-top: 3%;
+    margin-left: 3%;
     width: 50%;
     display: flex;
     justify-content: flex-start;
+    
 }
 iframe{
     display: flex;
-    
+    margin-right: 2%;
 }
 .meio1{
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
+    justify-content: space-between;
 }
 .images{
     display: flex;
-    margin: 10%;
+    margin-top: 7%;
+    margin-right: 7%;
+    margin-left: 7%;
+    margin-bottom: 4%;
     justify-content: space-between;
     
+}
+.sub-inicial{
+    margin-left: 17%;
+    margin-top: 3%;
+}
+.sub{
+    margin-left: 2%;
+}
+.conteudo{
+    margin-left: 4%;
+}
+.link{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between  ;
+    margin-left: 2%;
+
+}
+.baixar{
+    margin-right: 30%;
+    color: black;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    padding-top: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    padding-left: 2%;
+    border: 1px solid black;
+    border-radius: 2px;
+    background: rgb(40, 208, 93);
+    cursor: pointer;
+    border-radius: 7px;
+}
+
+*{
+    scroll-behavior: smooth;
+}
+.images_antigas{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+}
+.imgone{
+    margin-left: 3%;
+    margin-bottom: 5%;
+}
+.imgtwo{
+    padding-top: 3%;
+    margin-left: 14%;
+    margin-bottom: 5%;
+}
+.images_novas{
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }

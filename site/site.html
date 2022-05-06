@@ -16,12 +16,12 @@
         </div>
         <!-- 2: Descrição do jogo (incluindo algumas telas)-->
         <div class=cabeçalho2>
-            <button class="b1">Sobre</button>
-            <button>Como jogar</button>
-            <button>Soundtrack</button>
+            <a class="botao" href="#sobre">Conteúdo</a>
+            <a class="botao" href="#como">Desenvolvimento</a>
+            <a class="botao" href="#baixar">Baixar</a>
         </div>
         <div class="inicio">
-            <h2>
+            <h2 class = "sub-inicial" id="sobre">
                 O que é Tenor Blade?
             </h2>
         
@@ -31,53 +31,111 @@
                 Tenor Blade é um jogo de ritmo, onde um misterioso protagonista se encontra situado no centro da tela, em um esgoto. Terríveis monstros de esgoto o atacam pelas quatro direções cardeais, de acordo com o ritmo da música. Com a finalidade de ajudar o personagem, o jogador precisa golpear os inimigos no timing correto, para destruí-los antes que causem dano e reduzam seu HP para zero, causando sua morte. A fim de sobreviver e derrotar os monstros cabe ao player, ter a habilidade de golpear ao ritmo da música. Acha que está preparado para essa experiência musical desafiadora?
             </p>
             <!-- 7: vídeo curto apresentando o seu jogo-->
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/BaF2YFhLaok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/jYX7xQpb_C0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
         <div class="espaço">
 
         </div>
-        <div class="images">
-            <img src="data:image/jpeg;base64,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">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLufDdRViwfCWladuFNJ9rStlklvrFndBGlg&usqp=CAU">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFOO-CtRTALYYDTgjwrAz2HHavdEvfwTL8Mw&usqp=CAU">
+        <div class="images" id="baixar">
+            <img src=img/imagem-kills.png>
+            <img src="img/print-menu.png">
+            <img src="img/gamecopy.png">
         </div>
 
         
         <!-- 5: Link para download do pacote (zip) do jogo-->
-        <p class="link">
-            * Link para download do pacote (zip) do jogo: (em breve)
-        </p>
+        <div class="link">
+            <h2 class="textolink">* Link para download do pacote (zip) do jogo:</h2>
+            <a class="baixar" href="Insper-Pygame-Rythm-Versão-Rodando.zip" download="BAIXE JÁ">BAIXAR</a>
+        </div> 
+        
         <!-- 6: Instruções para executar o jogo-->
-        <h2> Passo a passo para executar o jogo </h2>
-        <ol>
+        <h2 class="sub" id="como"> Passo a passo para executar o jogo </h2>
+        <ol class="conteudo">
             <li>
                 Fazer o * download do pacote (zip) do jogo
             </li>
+            <br>
             <li>
                 Rodar o arquivo program.py
             </li>
+            <br>
             <li>
-                Com o jogo aberto você deve optar pelo modo normal (qualquer tecla para os ataques) ou difícil (teclas direcionadas para os ataques)
+                Com o jogo aberto você deve navegar pelo menu utilizado (WSAD) ou o sistema de setas do teclado.
             </li>
+            <br>
             <li>
-                Agora resta escolher a fase que deseja jogar, se concentrar e salvar o personagem!
+                Agora resta selecionar START e apertar enter, se concentrar e salvar o personagem , boa sorte!
             </li>
         </ol>
         <!--(apenas para o projeto final) 8: Relato da avaliação heurística-->
         <!-- 4: Log de desenvolvimento-->
-        <h2>
+        <h2 id="sobre" class="sub">
             Log de desenvolvimento
         </h2>
-        <ul>
-            <li>25/04/2022 - Repositório do github</li>
-            <li>26/04/2002 - Arquivo HTML feito para o site</li>
-            <li>27/04/2022 - Arquivo css feito para o site</li>
+        <ul class="conteudo">
+            <li>26/04/2022 - Repositório do github</li>
+            <br>
+            <li>27/04/2002 - Arquivo HTML feito para a primeira versão do site</li>
+            <br>
+            <li>28/04/2022 - Arquivo CSS para a primeira versão do site</li>
+            <br>
+            <li>29/04/2022 - Início do Background, composição da música</li>
+            <br>
+            <li>30/04/2002 - Animação de personagens</li>
+            <br>
+            <li>01/05/2022 - Efeitos sonoros</li>
+            <br>
+            <li>02/05/2022 - Músicas terminada, e sprites dos menus</li>
+            <br>
+            <li>03/05/2002 - Arquivo HTML feito para o site</li>
+            <br>
+            <li>04/05/2022 - Arquivo css feito para o site, estabilização e término do sistema de ritmo</li>
+            <br>
+            <li>05/05/2022 - Finalização da última versão do jogo e do site; menus feitos</li>
+            <br>
+            
             
         </ul>
+    <!-- 8: Atualização do site-->
+        <div class-="heuristicas">
+            <h2 class="sub">
+                Atualizações no site, com base no feedback de usuários.
+            </h2>
+            
+            <ol class="conteudo">
+                <br>
+                <li>Conceito: C.R.A.P. (Alinhamento)  Não era possível identificar um padrão de alinhamento entre os textos do site, dando a impressão de desorganização Legenda: Retângulo Azul</li>
+                <br>
+                <li> Conceito: Heurísticas 01 (Visibilidade do estado do sistema), Não havia feedback para o usuário após cicar nos botões de cima, gerando uma falta de confança no usuário, agora todos se tornaram responsivos. Legenda: Oval Vermelho </li>
+                <br>
+                <li> Conceito: Heurísticas 08 (Estética e Design minimalista), O header do site era muito mais chamativo que o conteudo em si, pela excessiva quantidade de espaço em branco tirando a atenção do usuário. Legenda: Flecha Amarela </li>
+                <br>
+                <li> Conceito: Heurísticas 04 (Consistência e padronização), Padrões externos de site normalizaram o uso do botão para donwload de jogos, onde na primeira versão do site seria usava um link, o que acabaria por afetar a confiança do usuário. Legenda: Retângulo Verde</li>
+                <br>
+                <li> Conceito: C.R.A.P.(Contraste), Falta de contratse durante a página dificulta a visão e interesse do usuário. Legenda: Corpo do site</li>
+                <br>
+            
+            </ol>
+        </div>
+        <div class="Comparação">
+            <h2 class="comparação"> Comparação entre a primeira e última versão do site </h2>
+        </div>
+        <div class="imagens_antigas">
+            <img class="imgone" src="img/update2.png" alt="">
+            <img class="imgtwo" src="img/update1.png" alt="">
+        </div>
+        
+        <div class="imagens_novas">
+            <img class="imgone" src="img/novo_1.png" alt="">
+            <img class="imgtwo" src="img/novo_2.png" alt="">
+        </div>
+        
         <!-- 3: Nomes dos membros do grupo-->
-        <p>
+        <p class="conteudo"> 
             Projeto prduzido por Tomás Rodrigues Alessi e Gustavo Lindenberg Pacheco (Grupo 10)
         </p>
+
     </body>
 </html>
