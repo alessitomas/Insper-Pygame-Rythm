@@ -203,10 +203,3 @@ def check_timing(synthsewers_timings, player_timings):
             return True
         else:
             return False
-
-
-
-
-
-
-
