@@ -138,3 +138,6 @@ iframe{
     flex-direction: row;
     justify-content: space-between;
 }
+.comparação{
+    margin-left: 2%;
+}
